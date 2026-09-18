@@ -66,3 +66,8 @@ revisando antes de publicar algo que importa. Si algo te da duda, pregunta antes
 
 Están en `CLAUDE.md` y en `.cursorrules` (el que lee Cursor solo). Puedes editarlas: son tuyas.
 Si quieres cambiar cómo te trata la IA, cambia ese archivo.
+
+## Licencia
+
+MIT (ver `LICENSE`). Puedes usarlo, copiarlo y adaptarlo libremente, conservando el aviso de
+copyright.
