@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vibecode para no-técnicos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Domine:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap">
+<style>
+  * { margin:0; padding:0; }
+  html, body { height:100%; background:#0b0d12; overflow:hidden; font-family:'DM Sans', Arial, sans-serif; }
+  #stage { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; }
+  .slide { position:absolute; left:50%; top:50%; transform-origin:center center; display:none; }
+  .slide.active { display:block; }
+  .slide > section { width:1920px; height:1080px; box-sizing:border-box; position:relative; overflow:hidden; }
+  .slide section aside { display:none; }
+  x-shape { display:inline-block; background:#888; }
+  x-shape[kind="arrow-right"] { clip-path: polygon(0 28%, 58% 28%, 58% 0, 100% 50%, 58% 100%, 58% 72%, 0 72%); }
+  x-icon { display:inline-block; }
+  /* HUD */
+  #hud { position:fixed; bottom:18px; left:50%; transform:translateX(-50%); z-index:10;
+         display:flex; align-items:center; gap:14px; padding:8px 16px; border-radius:999px;
+         background:rgba(20,24,32,.72); color:#cfd6e4; font-size:14px; backdrop-filter:blur(6px);
+         opacity:0; transition:opacity .25s; }
+  #stage:hover ~ #hud, #hud:hover { opacity:1; }
+  #hud button { all:unset; cursor:pointer; color:#cfd6e4; font-size:18px; line-height:1; padding:2px 8px; border-radius:6px; }
+  #hud button:hover { background:rgba(255,255,255,.12); }
+  #hud .count { min-width:56px; text-align:center; font-variant-numeric:tabular-nums; }
+  #hud .hint { color:#7a8698; font-size:12px; }
+  #notes { position:fixed; left:0; right:0; bottom:0; z-index:9; max-height:38vh; overflow:auto;
+           background:rgba(11,13,18,.94); color:#dde3ee; border-top:1px solid #2a3140;
+           padding:20px 28px; font-size:16px; line-height:1.55; white-space:pre-wrap; display:none; }
+  #notes.on { display:block; }
+  #notes b { color:#F0A583; }
+  @media (max-width:700px){ #hud .hint{ display:none; } }
+</style>
+</head>
+<body>
+<div id="stage">
+<div class="slide"><section id="cover" style="background:#14213D; color:#FBFBF8; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; justify-content:space-between">
+  <p style="font-size:28px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#E07A5F">Primera clase &middot; Ventas y Marketing</p>
+  <div style="display:flex; flex-direction:column; gap:28px">
+    <h1 style="font-family:'Domine', Georgia, serif; font-size:132px; font-weight:600; line-height:1.03">Vibecode<br>para no-técnicos</h1>
+    <p style="font-size:42px; color:#BFC9DC; width:1250px; line-height:1.3">Construir tus propias cosas con IA. El criterio sigue siendo tuyo.</p>
+  </div>
+  <p style="font-size:26px; color:#8C9AB5">Noventa minutos &middot; de la idea a algo que funciona</p>
+  <aside>Bienvenida (~30s). Hoy NO vamos a convertirlos en programadores. Vamos a que salgan capaces de pedirle a la IA que construya algo pequeño y útil para su trabajo, sin miedo y sin romper nada. La palabra que se repite toda la clase es una: criterio.</aside>
+</section></div>
+<div class="slide"><section id="hook" data-transition="fade" style="background:#14213D; color:#FBFBF8; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; justify-content:center; gap:48px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:74px; font-weight:500; line-height:1.22; width:1560px">"La IA no te quita el trabajo. Te quita la pausa en la que decidías si el problema valía la pena resolverse."</h2>
+  <p style="font-size:40px; color:#E07A5F; font-weight:600">Esa pausa —el criterio— sigue siendo tuya.</p>
+  <aside>~3 min. Léelo en voz alta. La IA hoy escribe el código: eso ya no es el trabajo difícil. Lo difícil, y lo que nadie automatiza por ustedes, es decidir QUÉ vale la pena construir y para quién. Eso ya lo hacen todos los días en ventas: leer al cliente, decidir dónde poner el tiempo. Ese mismo músculo es el que van a usar aquí.</aside>
+</section></div>
+<div class="slide"><section id="que-es" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; justify-content:center; gap:52px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:72px; font-weight:600">¿Qué es "vibecodear"?</h2>
+  <div style="display:flex; gap:32px">
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:48px; display:flex; flex-direction:column; gap:16px">
+      <p style="font-size:30px; font-weight:700; color:#E07A5F">Tú traes</p>
+      <p style="font-size:34px; line-height:1.35">El problema real y el criterio para decidir si vale la pena.</p>
+    </div>
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:48px; display:flex; flex-direction:column; gap:16px">
+      <p style="font-size:30px; font-weight:700; color:#E07A5F">La IA trae</p>
+      <p style="font-size:34px; line-height:1.35">El código y los detalles técnicos. No tienes que saber programar.</p>
+    </div>
+  </div>
+  <p style="font-size:30px; color:#4A5568; line-height:1.4; width:1500px">Le hablas en español, como a un colega. Le explicas qué quieres lograr, no cómo escribirlo.</p>
+  <aside>~2 min. Vibecodear = construir describiendo, no tecleando código. Analogía: es como dirigir a un becario rapidísimo y muy literal. Ustedes ponen la cabeza, él pone las manos. Y como a todo becario, hay que decirle bien qué queremos y revisar lo que entrega.</aside>
+</section></div>
+<div class="slide"><section id="agenda" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:36px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:68px; font-weight:600">La ruta de hoy</h2>
+  <div style="display:flex; flex-direction:column; gap:16px">
+    <div style="display:flex; align-items:center; gap:32px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px 40px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:42px; font-weight:600; color:#E07A5F; width:54px">1</p>
+      <p style="font-size:34px; font-weight:500; flex:1">El criterio primero</p>
+      <p style="font-size:26px; color:#4A5568">15 min</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:32px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px 40px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:42px; font-weight:600; color:#E07A5F; width:54px">2</p>
+      <p style="font-size:34px; font-weight:500; flex:1">Fundamentos sin miedo</p>
+      <p style="font-size:26px; color:#4A5568">30 min</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:32px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px 40px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:42px; font-weight:600; color:#E07A5F; width:54px">3</p>
+      <p style="font-size:34px; font-weight:500; flex:1">Operar con criterio</p>
+      <p style="font-size:26px; color:#4A5568">20 min</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:32px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px 40px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:42px; font-weight:600; color:#E07A5F; width:54px">4</p>
+      <p style="font-size:34px; font-weight:500; flex:1">Tu primer vibecode, en vivo</p>
+      <p style="font-size:26px; color:#4A5568">30 min</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:32px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px 40px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:42px; font-weight:600; color:#E07A5F; width:54px">5</p>
+      <p style="font-size:34px; font-weight:500; flex:1">No romper nada + qué sigue</p>
+      <p style="font-size:26px; color:#4A5568">10 min</p>
+    </div>
+  </div>
+  <aside>~1 min. Cinco bloques, dos horas si se ve completo. La cabeza está en 1, 2 y 3; las manos en 4. La parte 2 (Fundamentos) es referencia: elige el core en vivo (mentalidad, anatomía, APIs, secretos, cómo funciona la IA, investigar, clonar) y deja el resto como lectura. La parte 3 (Operar) es la que convierte todo lo anterior en una rutina que pueden repetir solos: es la más importante para que no salgan con falsa sensación de que ya pueden con todo. Si el tiempo aprieta, sacrifica fundamentos, nunca la parte 3.</aside>
+</section></div>
+<div class="slide"><section id="sec-criterio" data-transition="push" style="background:#E07A5F; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; justify-content:center; gap:24px">
+  <p style="font-size:32px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#3A2318">Parte 1</p>
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:106px; font-weight:600; line-height:1.04">El criterio primero</h2>
+  <p style="font-size:38px; color:#3A2318; width:1320px; line-height:1.3">Antes de construir nada, la pregunta no es "¿puedo?", es "¿vale la pena?".</p>
+  <aside>Transición. Aquí está el corazón de la clase. Todo lo demás es técnica; esto es criterio.</aside>
+</section></div>
+<div class="slide"><section id="criterio-idea" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; justify-content:center; gap:40px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:78px; font-weight:600; line-height:1.15; width:1500px">"El criterio no se automatiza."</h2>
+  <p style="font-size:36px; color:#4A5568; line-height:1.4; width:1440px">La IA puede construir mil cosas. Cuáles merecen existir sigue siendo una decisión humana. Ese filtro es tu mayor ventaja, no tu límite.</p>
+  <aside>~2 min. El error del principiante es pedir todo lo que se le ocurre. La IA lo hará. Y termina con diez cosas a medias que nadie usa. Su trabajo NO es construir mucho: es elegir bien qué construir. Eso es exactamente lo que ya saben hacer priorizando cuentas.</aside>
+</section></div>
+<div class="slide"><section id="preguntas" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:40px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:64px; font-weight:600">Antes de pedir algo, 4 preguntas</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:28px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:40px; display:flex; flex-direction:column; gap:12px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:40px; color:#E07A5F; font-weight:600">1</p>
+      <p style="font-size:32px; font-weight:600; line-height:1.25">¿El problema es real y se repite?</p>
+      <p style="font-size:26px; color:#4A5568; line-height:1.4">¿O pasó una sola vez? No construyas para un caso único.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:40px; display:flex; flex-direction:column; gap:12px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:40px; color:#E07A5F; font-weight:600">2</p>
+      <p style="font-size:32px; font-weight:600; line-height:1.25">¿Ya existe algo que lo resuelve?</p>
+      <p style="font-size:26px; color:#4A5568; line-height:1.4">Búscalo antes de construir desde cero. Casi siempre existe.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:40px; display:flex; flex-direction:column; gap:12px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:40px; color:#E07A5F; font-weight:600">3</p>
+      <p style="font-size:32px; font-weight:600; line-height:1.25">¿Vale la pena construirlo y mantenerlo?</p>
+      <p style="font-size:26px; color:#4A5568; line-height:1.4">Todo lo que construyes, alguien lo cuida después.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:40px; display:flex; flex-direction:column; gap:12px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:40px; color:#E07A5F; font-weight:600">4</p>
+      <p style="font-size:32px; font-weight:600; line-height:1.25">¿Quién lo va a usar después de ti?</p>
+      <p style="font-size:26px; color:#4A5568; line-height:1.4">Que te sirva a ti, no que dependa de la IA para siempre.</p>
+    </div>
+  </div>
+  <aside>~8 min. Esta es la slide para detenerse. Pídeles un ejemplo real de su semana y pásenlo por las 4 preguntas en voz alta. Si una respuesta no está clara, la regla es: pregúntale UNA cosa a la IA, no arranques a construir. Estas 4 preguntas están dentro de la carpeta starter, no hay que memorizarlas.</aside>
+</section></div>
+<div class="slide"><section id="sec-fundamentos" data-transition="push" style="background:#14213D; color:#FBFBF8; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; justify-content:center; gap:24px">
+  <p style="font-size:32px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#E07A5F">Parte 2</p>
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:106px; font-weight:600; line-height:1.04">Fundamentos sin miedo</h2>
+  <p style="font-size:38px; color:#BFC9DC; width:1500px; line-height:1.3">Las piezas de una app, cómo funciona la IA que programa y dónde investigar. Cada concepto con su definición precisa y una analogía.</p>
+  <aside>Transición (~1 min). Cómo usar esta parte: cada slide trae tres capas. La banda oscura es la definición exacta, como la formula la fuente oficial: léela. La línea naranja es la analogía con la que aterrizas. Las tarjetas son los hechos que se llevan. Las notas de cada slide tienen cuatro bloques: definición exacta, cómo lo cuento, para subir de nivel (lo que respondes cuando pregunten) y el mito a corregir, con la fuente primaria. No hay que cubrir todo: elige según el grupo.</aside>
+</section></div>
+<div class="slide"><section id="mentalidad" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:24px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Cómo trabaja quien construye software</h2>
+  <div style="background:#14213D; color:#FBFBF8; border-radius:16px; padding:26px 32px; display:flex; flex-direction:column; gap:6px">
+    <p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#F0A583">Definición</p>
+    <p style="font-size:28px; line-height:1.4; color:#EEF1F6">La ingeniería de software es la disciplina de construir y cambiar sistemas de forma segura y repetible: cada cambio se versiona, se revisa, se prueba y se integra en pasos pequeños.</p>
+  </div>
+  <p style="font-size:26px; color:#4A5568; line-height:1.4"><b style="color:#E07A5F">Analogía:</b> Git es Google Docs con historial. Cada commit es un guardado con nombre; una rama es un borrador paralelo; el pull request es "revisa mi borrador antes de pasarlo al documento principal".</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Versionar (Git)</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Cada commit es una foto del proyecto a la que puedes volver. Una rama aísla un cambio sin tocar lo que ya funciona.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Revisar (code review)</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Otra persona, o un agente, lee el cambio antes de integrarlo: corrección, casos límite, seguridad, legibilidad.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Probar (tests)</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Código que verifica que otro código hace lo esperado. Unitarios (una función), integración (API + datos), end-to-end (el flujo completo).</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Integrar seguido (CI)</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Cada cambio corre las pruebas solo (p. ej. GitHub Actions); si fallan, no se integra. Cambios pequeños y frecuentes.</p>
+    </div>
+  </div>
+  <aside>DEFINICIÓN EXACTA: Git es un sistema de control de versiones distribuido; un repositorio guarda instantáneas (commits); una rama es un puntero a un commit; merge combina ramas. El pull request es un concepto de GitHub, no de Git: muestra el diff, permite comentar, corre checks y exige revisión antes de integrar.
+CÓMO LO CUENTO: la buena noticia para ventas es que esto no es sintaxis, es orden y prudencia, que ya tienen. Google Docs con historial es la analogía; cada commit es guardar con nombre y fecha.
+PARA SUBIR DE NIVEL: pirámide de pruebas (muchos unitarios rápidos, algunos de integración, pocos end-to-end porque son lentos y frágiles). Un PR de 50 líneas se revisa en 10 minutos; uno de 500 esconde bugs. Trunk-based o ramas cortas (menos de 2 días) para no divergir de main. CI en GitHub Actions es un YAML en .github/workflows que corre lint, tipos, build y tests en cada push y bloquea el merge si falla. Versionado semántico: mayor.menor.parche.
+MITO: "si hay tests, el código es correcto". Los tests verifican lo que TÚ esperas; si la expectativa está mal, el test también. Son documentos vivos.
+FUENTES: git-scm.com/book (Git Basics, Branching), docs.github.com (Understanding GitHub Actions), martinfowler.com.</aside>
+</section></div>
+<div class="slide"><section id="glosario" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:36px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Palabras que vas a oír todos los días</h2>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:22px 56px">
+    <div style="display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:30px; font-weight:700">Repo</p>
+      <p style="font-size:25px; color:#4A5568; line-height:1.4">El proyecto completo con su historial. Vive en tu compu y, como copia remota, en GitHub.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:30px; font-weight:700">Commit</p>
+      <p style="font-size:25px; color:#4A5568; line-height:1.4">Una foto del proyecto con nombre y fecha. Un punto al que puedes volver.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:30px; font-weight:700">Rama (branch)</p>
+      <p style="font-size:25px; color:#4A5568; line-height:1.4">Una línea de trabajo paralela para un cambio, sin tocar lo que ya funciona (main).</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:30px; font-weight:700">Pull request</p>
+      <p style="font-size:25px; color:#4A5568; line-height:1.4">"Revisa mi cambio antes de integrarlo". Muestra el diff, permite comentar y correr pruebas.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:30px; font-weight:700">Merge</p>
+      <p style="font-size:25px; color:#4A5568; line-height:1.4">Integrar una rama en otra. Normalmente tu cambio a la principal.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:30px; font-weight:700">Bug</p>
+      <p style="font-size:25px; color:#4A5568; line-height:1.4">Un comportamiento distinto al esperado. Se reproduce, se entiende la causa, se arregla, se prueba.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:30px; font-weight:700">Localhost</p>
+      <p style="font-size:25px; color:#4A5568; line-height:1.4">Tu app corriendo en tu propia máquina. Nadie más la ve hasta que la publicas.</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:30px; font-weight:700">Prompt</p>
+      <p style="font-size:25px; color:#4A5568; line-height:1.4">Lo que le pides a la IA: contexto + objetivo + restricciones. En español está bien.</p>
+    </div>
+  </div>
+  <aside>CÓMO LO CUENTO (~4 min): no hay que memorizar; el objetivo es que estas palabras dejen de asustar cuando la IA las diga. Aterriza commit con Word: guardar con nombre y fecha y poder volver a una versión anterior. Localhost es el ensayo privado.
+PARA SUBIR DE NIVEL: main (antes master) es la rama principal; origin es el nombre habitual de la copia remota en GitHub; diff es la lista exacta de líneas que cambian; .gitignore lista lo que Git no debe guardar (node_modules, .env, builds), y una vez algo ya se subió, ponerlo en .gitignore no lo saca del historial. Un bug se reporta con: qué esperaba, qué pasó, cómo reproducirlo, versión.
+MITO: "commit y guardar es lo mismo". Guardar escribe el archivo; commit registra un punto en el historial con mensaje. Se puede guardar mil veces sin un solo commit.
+FUENTES: git-scm.com/book, docs.github.com (About pull requests).</aside>
+</section></div>
+<div class="slide"><section id="anatomia" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:24px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Anatomía de una app: cliente y servidor</h2>
+  <div style="background:#14213D; color:#FBFBF8; border-radius:16px; padding:26px 32px; display:flex; flex-direction:column; gap:6px">
+    <p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#F0A583">Definición (MDN)</p>
+    <p style="font-size:28px; line-height:1.4; color:#EEF1F6">La web funciona con una arquitectura cliente-servidor: el navegador (cliente) envía peticiones HTTP a un servidor, que las procesa y devuelve respuestas.</p>
+  </div>
+  <p style="font-size:26px; color:#4A5568; line-height:1.4"><b style="color:#E07A5F">Analogía:</b> un restaurante. El comedor es el frontend, la cocina es el backend, la despensa es la base de datos, y el mesero que lleva y trae pedidos es HTTP.</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Frontend (cliente)</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Código que corre en el navegador del usuario: lo que ve y toca. HTML, CSS y JavaScript.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Backend (servidor)</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Código que corre en una máquina que tú controlas: lógica, permisos y acceso a los datos.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Base de datos</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">El almacén persistente de la información. El navegador solo entra por una interfaz diseñada para eso y con permisos mínimos; nunca con credenciales de administrador.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Ciclo petición → respuesta</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Cada clic manda una petición y el servidor responde. Sin estado por defecto: cada petición va sola; cookies y sesiones guardan el hilo.</p>
+    </div>
+  </div>
+  <aside>DEFINICIÓN EXACTA: el navegador resuelve el dominio a una IP vía DNS, manda la petición HTTP, recibe la respuesta (HTML, CSS, JS o datos) y la renderiza ejecutando el JavaScript. El servidor escucha peticiones, corre la lógica y devuelve recursos. HTTPS cifra en tránsito.
+CÓMO LO CUENTO: el restaurante es la analogía que más rinde en toda la clase. Cada botón que aprietas dispara algo en la cocina: el back existe PARA el front, se diseñan juntos.
+PARA SUBIR DE NIVEL: un servidor atiende miles de clientes a la vez. "Serverless" no es sin servidor: es que tu backend corre en funciones que el proveedor (Vercel) arranca por petición y apaga después; no administras la máquina. HTTP/2 y HTTP/3 multiplexan varias peticiones por conexión, pero el modelo conceptual no cambia. El navegador es un entorno que NO controlas (versión, extensiones, red lenta): por eso el front valida la experiencia y el back valida la verdad (permisos, datos).
+MITO: "el backend es lo difícil y el front lo fácil". Los dos son código; el front corre en la máquina del usuario, donde no controlas nada.
+FUENTES: developer.mozilla.org (How does the Internet work; Client-Server overview).</aside>
+</section></div>
+<div class="slide"><section id="apis" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:24px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">HTTP, APIs y endpoints</h2>
+  <div style="background:#14213D; color:#FBFBF8; border-radius:16px; padding:26px 32px; display:flex; flex-direction:column; gap:6px">
+    <p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#F0A583">Definición</p>
+    <p style="font-size:28px; line-height:1.4; color:#EEF1F6">Una API es el contrato que define cómo otro código puede pedirle cosas a un sistema; un endpoint es una URL concreta que responde a una petición (GET /api/clientes/123).</p>
+  </div>
+  <p style="font-size:26px; color:#4A5568; line-height:1.4"><b style="color:#E07A5F">Analogía:</b> la API es el menú, cada endpoint es un platillo, HTTP es el mesero y JSON es el idioma en que llega el pedido.</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Métodos HTTP</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">GET lee, POST crea, PUT/PATCH modifica, DELETE borra. GET se repite sin efecto; POST suele crear, así que si algo no debe duplicarse, el sistema necesita protección (idempotency key).</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Códigos de estado</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">2xx bien (200, 201 creado). 4xx culpa del cliente (400, 401 sin auth, 404 no existe, 429 límite). 5xx culpa del servidor (500, 503).</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">JSON y REST</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">JSON es el formato de datos habitual (no es parte de HTTP). REST: URLs que nombran recursos y verbos HTTP como acciones. Convención, no estándar.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">SDK, versiones y límites</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">SDK = librería que envuelve la API por ti. /v1 y /v2 para no romper clientes viejos. Rate limit: p. ej. 100 peticiones por minuto; si te pasas, 429.</p>
+    </div>
+  </div>
+  <aside>DEFINICIÓN EXACTA: HTTP es un protocolo de capa de aplicación: el cliente manda una petición con un método y el servidor responde con un código de estado y un cuerpo (casi siempre JSON). API = el conjunto completo de reglas (endpoints + autenticación + formato de respuesta). Endpoint = una ruta. SDK = librería que hace las llamadas HTTP por ti (p. ej. el SDK de Stripe).
+CÓMO LO CUENTO: cada clic de su app es una llamada a una API por debajo; no es algo "para otros programas". Un ejemplo de ventas: "tráeme los leads de hoy" es un GET a un endpoint; "crea este lead" es un POST.
+PARA SUBIR DE NIVEL: idempotencia (GET, PUT y DELETE se pueden repetir sin cambiar el resultado; POST y PATCH no). Autenticación: API key = una cadena que te identifica, simple; OAuth = el usuario autoriza a tu app a actuar en su nombre con permisos acotados (scopes), es lo que pasa cuando "inicias sesión con Google". Webhooks = la API te llama a ti cuando ocurre algo (pago recibido). 301 vs 302 en redirecciones. El 429 se maneja con reintentos con espera creciente.
+MITO: "una API es una página que abro en el navegador". Es código hablando con código: devuelve datos, no HTML.
+FUENTES: developer.mozilla.org/docs/Web/HTTP; developer.mozilla.org/docs/Glossary/API; docs.stripe.com/api.</aside>
+</section></div>
+<div class="slide"><section id="secretos" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:24px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Secretos, API keys y variables de entorno</h2>
+  <div style="background:#14213D; color:#FBFBF8; border-radius:16px; padding:26px 32px; display:flex; flex-direction:column; gap:6px">
+    <p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#F0A583">Definición (12-factor)</p>
+    <p style="font-size:28px; line-height:1.4; color:#EEF1F6">La configuración que cambia entre entornos (credenciales, llaves, URLs de base de datos) vive en variables de entorno, nunca escrita en el código fuente.</p>
+  </div>
+  <p style="font-size:26px; color:#4A5568; line-height:1.4"><b style="color:#E07A5F">Analogía:</b> la llave es la tarjeta corporativa. No se fotografía ni se manda por chat. El archivo .env es tu caja fuerte local; la de producción la guarda el hosting.</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">.env y .gitignore</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">En local, las llaves van en un archivo .env que Git ignora. En producción las pone la plataforma (Vercel), una por entorno.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Nunca al repo</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Git no olvida: borrar la llave en un commit nuevo no la quita del historial. Si se subió, se rota (se genera otra) de inmediato.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Mínimo privilegio</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Una llave para leer analítica no debe poder borrar datos. Permisos acotados (scopes) y una llave por uso.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Si se filtra</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Alguien puede gastar tu cuota, generar cargos o llegar a datos de clientes. Activa secret scanning y push protection si tu plan lo permite; en todo caso, asume que prevenir y rotar es tu responsabilidad.</p>
+    </div>
+  </div>
+  <aside>DEFINICIÓN EXACTA: 12-factor "Config": todo lo que varía entre despliegues se guarda en el entorno, no en el código; un repo debería poder hacerse público sin exponer credenciales. OWASP Secrets Management: inventario, rotación, mínimo privilegio, nunca en logs.
+CÓMO LO CUENTO: es la slide que más protege a ventas y marketing. La llave es la tarjeta de crédito de la empresa; jamás pegarla en un chat, en un prompt público ni en una captura de pantalla. En el starter, las reglas de la casa ya dicen "nunca toques contraseñas, llaves ni datos de clientes".
+PARA SUBIR DE NIVEL: secretos distintos por entorno (development, preview, production). Gestores de secretos (las variables de Vercel, 1Password, Vault). Rotación periódica aunque no haya incidente. .env.example con los nombres sin valores para documentar qué hace falta. Reescribir el historial de Git para sacar un secreto es destructivo y no sustituye rotar. Cuando la IA es agéntica y puede leer archivos, el .env también es un dato que hay que cuidar en los prompts.
+MITO: "si la borro del código ya no existe". Sigue en el historial; lo que vale es invalidar la llave real.
+FUENTES: 12factor.net/config; cheatsheetseries.owasp.org (Secrets Management); docs.github.com (secret scanning).</aside>
+</section></div>
+<div class="slide"><section id="datos" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:24px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Bases de datos</h2>
+  <div style="background:#14213D; color:#FBFBF8; border-radius:16px; padding:26px 32px; display:flex; flex-direction:column; gap:6px">
+    <p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#F0A583">Definición</p>
+    <p style="font-size:28px; line-height:1.4; color:#EEF1F6">Un almacén persistente y organizado de información. Relacional: tablas con esquema y llaves (Postgres). Documental: documentos JSON sin esquema fijo (MongoDB).</p>
+  </div>
+  <p style="font-size:26px; color:#4A5568; line-height:1.4"><b style="color:#E07A5F">Analogía:</b> la hoja de cálculo es un archivero. La base de datos es un almacén con etiquetas, reglas y montacargas: mucha gente, mucho volumen, sin accidentes.</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Tablas, filas, columnas, esquema</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Una tabla es una cuadrícula; el esquema define tipos y reglas (obligatorio, único). Cada fila tiene una llave primaria que la identifica.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Relaciones</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Una llave foránea enlaza tablas (pedido.cliente_id → cliente.id) y la base impide inconsistencias: no borras un cliente con pedidos.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Migraciones y respaldos</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Migración = script versionado que cambia el esquema, en orden y reversible. Respaldo = foto para volver si se borra algo.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">¿Hoja o base?</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Hoja: una tabla, pocas filas, una persona. Base: varias tablas relacionadas, muchos usuarios a la vez, integridad. Supabase = Postgres administrado.</p>
+    </div>
+  </div>
+  <aside>DEFINICIÓN EXACTA: en el modelo relacional, la llave primaria identifica cada fila y la base la indexa para buscar rápido; la llave foránea garantiza integridad referencial. Una migración es un cambio de esquema versionado que se aplica en orden (Martin Fowler, Evolutionary Database Design). Supabase es PostgreSQL administrado con autenticación, tiempo real, respaldos y seguridad por fila (row-level security) incluidos.
+CÓMO LO CUENTO: para su primer proyecto quizá no necesiten base de datos; la palabra se explica para que no asuste. Cuando aparezca "tabla" o "esquema", piensen en una hoja con reglas.
+PARA SUBIR DE NIVEL: ACID (atomicidad, consistencia, aislamiento, durabilidad) es lo que una hoja NO te da bajo carga. Índices aceleran búsquedas a cambio de escrituras más lentas. Un ORM (Prisma, Drizzle) es la capa entre el código y la base para no escribir SQL a mano. Row-level security en Supabase decide qué filas ve cada usuario. Los respaldos se planean por retención (diarios 30 días, semanales un año). Las migraciones destructivas (borrar columna) se revisan aparte: en la casa están bloqueadas sin aprobación.
+MITO: "un Excel es lo mismo que una base de datos". Es una base que falla en silencio cuando crece o cuando varias personas editan a la vez.
+FUENTES: supabase.com/docs; martinfowler.com/articles/evodb.html; postgresql.org/docs.</aside>
+</section></div>
+<div class="slide"><section id="conectores" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:24px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Conectores y MCP</h2>
+  <div style="background:#14213D; color:#FBFBF8; border-radius:16px; padding:26px 32px; display:flex; flex-direction:column; gap:6px">
+    <p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#F0A583">Definición (modelcontextprotocol.io)</p>
+    <p style="font-size:28px; line-height:1.4; color:#EEF1F6">MCP es un estándar abierto (Anthropic, noviembre 2024) para que las aplicaciones de IA se conecten a datos, herramientas y flujos externos con una interfaz común.</p>
+  </div>
+  <p style="font-size:26px; color:#4A5568; line-height:1.4"><b style="color:#E07A5F">Analogía:</b> el USB-C de la IA. Un conector se construye una vez y sirve para cualquier asistente: Claude, Cursor o el que venga.</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Arquitectura</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Host (Claude, Cursor) → cliente → servidor MCP (el código que expone la herramienta). Local (stdio) o remoto (HTTP).</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Tres primitivas</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Tools: acciones que la IA ejecuta (mandar, consultar). Resources: datos de solo lectura. Prompts: plantillas de tarea.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Consentimiento</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">El host muestra qué quiere hacer un servidor y tú apruebas, niegas o revocas. Configura aprobación explícita para las acciones sensibles y revisa qué permisos diste.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Conector</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">En Claude, un conector es un servidor MCP empaquetado para activarlo sin configurar nada. Ej.: Slack, Gmail, tu base de datos.</p>
+    </div>
+  </div>
+  <aside>DEFINICIÓN EXACTA: el host es la aplicación de IA; cada host abre un cliente por servidor; el servidor expone tools (funciones que el modelo puede invocar), resources (contexto de solo lectura) y prompts (plantillas). Transportes: stdio para procesos locales y HTTP para servidores remotos. Es un estándar abierto con SDKs en varios lenguajes.
+CÓMO LO CUENTO: imaginen que la IA pueda leer el Slack del equipo o traer los leads de la base sin copiar y pegar. En la casa existen conectores propios (contenido, mailing, analítica); aquí solo lo conceptual: qué son y que siempre piden permiso.
+PARA SUBIR DE NIVEL: los permisos se acotan por scopes (leer vs escribir) y por servidor. Riesgo real: un servidor o un documento leído por la IA puede intentar meter instrucciones (prompt injection); por eso el consentimiento explícito y no dar acceso de escritura a lo que no lo necesita. Un conector de solo lectura es el punto de partida sano. Alternativas: function calling directo de cada API (no portable) vs MCP (portable entre asistentes).
+MITO doble: "la IA no puede tocar mis datos" (sí puede, con permiso) y "MCP hace lo que quiere" (no: cada acción pasa por el host y tu aprobación).
+FUENTES: modelcontextprotocol.io/introduction; modelcontextprotocol.io/docs/concepts.</aside>
+</section></div>
+<div class="slide"><section id="como-funciona-ia" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:24px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Cómo funciona la IA que programa</h2>
+  <div style="background:#14213D; color:#FBFBF8; border-radius:16px; padding:26px 32px; display:flex; flex-direction:column; gap:6px">
+    <p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#F0A583">Definición</p>
+    <p style="font-size:28px; line-height:1.4; color:#EEF1F6">Un modelo de lenguaje predice el siguiente token (trozo de palabra) a partir del contexto. No consulta la verdad: calcula lo más probable. Por eso puede sonar seguro y estar mal.</p>
+  </div>
+  <p style="font-size:26px; color:#4A5568; line-height:1.4"><b style="color:#E07A5F">Analogía:</b> un becario brillante con memoria de una sola conversación. Todo lo que no le pongas enfrente, lo va a suponer.</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Tokens y ventana de contexto</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Un token son unos 4 caracteres. La ventana es cuánto texto "ve" a la vez. Lo que no cabe o no le diste, para el modelo no existe.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Alucinación</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Salida plausible pero falsa: una función que no existe, una cifra inventada. No miente, predice. Se verifica contra la doc oficial.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Contexto = calidad</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Reglas (CLAUDE.md, .cursorrules), docs y ejemplos reales reducen alucinaciones y hacen que siga tu forma de trabajar. Es el archivo del starter.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Agéntico</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">No solo responde: ejecuta herramientas (lee archivos, edita, corre comandos) en bucle hasta lograr el objetivo. Por eso las reglas de "nunca sin preguntar".</p>
+    </div>
+  </div>
+  <aside>DEFINICIÓN EXACTA: el modelo genera texto token a token según probabilidades aprendidas; la ventana de contexto es el máximo de tokens que puede recibir en una llamada (hoy va de cientos de miles a un millón según el modelo; no pongo cifras en la slide porque cambian). Alucinación: contenido fluido y seguro que no corresponde a hechos. Agente: el modelo decide llamar herramientas, recibe el resultado y sigue iterando (tool use).
+CÓMO LO CUENTO: el becario brillante sin memoria. Si no le das las reglas de la casa y los documentos, va a suponer. Por eso en el starter existe CLAUDE.md: es la memoria y las reglas que le pones enfrente en cada conversación.
+PARA SUBIR DE NIVEL: no aprende de tu conversación; no se reentrena con lo que le dices, solo lo tiene en contexto mientras dura la sesión, y al cerrarla se pierde: por eso se documenta en archivos. Las entradas cuestan menos que las salidas; el prompt caching abarata contexto repetido. Un archivo de reglas de unos miles de tokens ahorra decenas de miles en correcciones. En Cursor las reglas viven en .cursorrules o en .cursor/rules; en Claude Code en CLAUDE.md. Los agentes pueden llevar permisos y hooks que bloquean acciones (en la casa los llamamos gates): el "nunca borres sin preguntar" se puede hacer cumplir, no solo pedir.
+MITO: "si lo dice con seguridad, es cierto". La seguridad del tono no correlaciona con la exactitud. Verificar firmas de funciones y APIs contra la doc antes de usarlas.
+FUENTES: platform.claude.com/docs (models overview; tool use); cursor.com/docs (rules).</aside>
+</section></div>
+<div class="slide"><section id="investigar" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:22px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Investigar: la jerarquía de fuentes</h2>
+  <div style="background:#14213D; color:#FBFBF8; border-radius:16px; padding:24px 32px; display:flex; flex-direction:column; gap:6px">
+    <p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#F0A583">Definición</p>
+    <p style="font-size:28px; line-height:1.4; color:#EEF1F6">La fuente primaria vence a la derivada: la documentación oficial vence al blog, el código fuente vence al tutorial, la especificación vence a lo que dijeron en un foro.</p>
+  </div>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:20px 24px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:25px; font-weight:600"><span style="color:#E07A5F">1</span> Documentación oficial</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Responde "¿cómo se usa y qué soporta?". Canónica y versionada.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:20px 24px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:25px; font-weight:600"><span style="color:#E07A5F">2</span> Código fuente / repo</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Responde "¿qué hace en realidad?". La verdad sin intermediarios.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:20px 24px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:25px; font-weight:600"><span style="color:#E07A5F">3</span> Changelogs y release notes</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Responde "¿qué cambió y qué se rompe entre versiones?".</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:20px 24px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:25px; font-weight:600"><span style="color:#E07A5F">4</span> Issues de GitHub</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Responde "¿alguien tuvo mi problema?". Casos reales y workarounds; mira los cerrados.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:20px 24px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:25px; font-weight:600"><span style="color:#E07A5F">5</span> Stack Overflow y foros</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Responde "¿cómo lo resolvieron rápido?". Verifica fecha y versión: envejece.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:20px 24px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:25px; font-weight:600"><span style="color:#E07A5F">6</span> Specs, blogs y papers</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Responde "¿por qué se diseñó así?". Criterio y decisiones de fondo.</p>
+    </div>
+  </div>
+  <div style="display:flex; align-items:center; gap:22px; background:#F3ECE4; border-radius:14px; padding:22px 30px">
+    <x-icon name="Lightbulb" style="color:#E07A5F; width:40px; height:40px"></x-icon>
+    <p style="font-size:25px; flex:1; line-height:1.4">Antes de construir, pídele a la IA: <b>"investiga esto primero, cita la fuente y dime qué encontraste"</b>. Y verifica lo que cita.</p>
+  </div>
+  <aside>DEFINICIÓN EXACTA: jerarquía de fidelidad, de mayor a menor: docs oficiales (revisadas y versionadas), código fuente (la verdad de lo que hace), changelogs (cambios y rupturas entre versiones), specs y RFCs (la razón de diseño y los casos límite), issues (usuarios reales), blogs de ingeniería y papers (decisiones de fondo), foros (ayuda rápida, envejece).
+CÓMO LO CUENTO: esto responde directo a "¿qué tan importantes son los papers, los foros y la doc oficial para vibecodear?". Respuesta: la doc oficial y el código real son la base que mantiene honesta a la IA; los foros resuelven el bug puntual; los blogs y papers dan criterio. El 80% de vibecodear bien es investigar y reusar antes de escribir. Analogía: el contrato original, el resumen del abogado y lo que te contaron en el pasillo.
+PARA SUBIR DE NIVEL: la versión importa: una respuesta para React 16 no sirve para React 19; mira la fecha. Cómo preguntar bien (Raymond, How To Ask Questions The Smart Way): qué esperabas, qué pasó, cómo reproducirlo, versión, qué ya intentaste. Pedirle a la IA que cite y luego abrir la cita: si la URL no existe, alucinó. Búsqueda dentro del repo (grep, la búsqueda de GitHub) para confirmar que una función existe antes de usarla. En la casa la regla es literal: verificar que imports, funciones y APIs existen antes de usarlas; "no sé" vale más que una respuesta segura y equivocada.
+MITO: "Stack Overflow es la fuente de la verdad". Es ayuda de la comunidad en un momento dado; se verifica contra la doc.
+FUENTES: developer.mozilla.org; docs.github.com; catb.org/esr/faqs/smart-questions.html.</aside>
+</section></div>
+<div class="slide"><section id="clonar" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:24px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Clonar un repo: leer código que ya funciona</h2>
+  <div style="background:#14213D; color:#FBFBF8; border-radius:16px; padding:26px 32px; display:flex; flex-direction:column; gap:6px">
+    <p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#F0A583">Definición (git-scm)</p>
+    <p style="font-size:28px; line-height:1.4; color:#EEF1F6">Clonar es descargar a tu máquina una copia completa de un repositorio con todo su historial. Hacer fork es crear tu propia copia en GitHub para modificarla y proponer cambios.</p>
+  </div>
+  <p style="font-size:26px; color:#4A5568; line-height:1.4"><b style="color:#E07A5F">Analogía:</b> clonar es fotocopiar el expediente completo para estudiarlo; fork es abrir tu propio expediente a partir de él.</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Cómo</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">En Cursor: "Clone Repository" y pegas la URL. Por debajo: git clone. Luego abres la carpeta y le pides a la IA que la explique.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Qué leer primero</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">README (qué es y cómo correrlo), la estructura de carpetas y las dependencias (package.json). Después, el flujo que te interesa.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">LICENSE, siempre</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">MIT / Apache: casi todo permitido, con atribución. GPL: si lo usas, tu código también debe ser abierto. Sin licencia = todos los derechos reservados.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Para qué sirve</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Aprender un contexto nuevo, tomar un patrón que ya corre y darle a la IA un ejemplo real en vez de dejarla suponer.</p>
+    </div>
+  </div>
+  <aside>DEFINICIÓN EXACTA: git clone copia el repositorio remoto (origin) con su historial completo; puedes leer y correr, y solo subir cambios si tienes permiso. Fork es un concepto de GitHub: tu copia en tu cuenta, desde la que abres pull requests al original. README es la portada del proyecto; LICENSE define legalmente qué puedes hacer con el código (choosealicense.com).
+CÓMO LO CUENTO: Karen lo llama su arma más grande. Es la mejor documentación que existe: no lo que alguien dijo que hace, sino lo que de verdad hace. Flujo de oro: encontrar un repo parecido, clonarlo, pedirle a la IA que lo explique, quedarte solo con la pieza que sirve.
+PARA SUBIR DE NIVEL: señales de salud de un repo: fecha del último commit, issues abiertos vs cerrados, estrellas no lo dicen todo. No correr scripts de instalación sin leerlos (riesgo de cadena de suministro); la IA puede leerlos por ti primero. Plantillas (template repositories) son la tercera vía: crean un repo nuevo sin historial. Atribución: MIT pide conservar el aviso de copyright; en la casa se lleva un catálogo de skills con la procedencia y licencia de cada una, y se ha rechazado material sin licencia clara. PolyForm Noncommercial, por ejemplo, prohíbe uso comercial.
+MITO: "está en GitHub, es libre". Público no es lo mismo que licenciado; sin LICENSE, todos los derechos reservados.
+FUENTES: git-scm.com/book (Getting a Git Repository); docs.github.com (Fork a repository); choosealicense.com.</aside>
+</section></div>
+<div class="slide"><section id="deploy" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:24px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Despliegues y Vercel</h2>
+  <div style="background:#14213D; color:#FBFBF8; border-radius:16px; padding:26px 32px; display:flex; flex-direction:column; gap:6px">
+    <p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#F0A583">Definición (Vercel)</p>
+    <p style="font-size:28px; line-height:1.4; color:#EEF1F6">Un deployment es el resultado de una build exitosa de tu proyecto, con una URL única. Hay deployments de preview (por rama o PR) y de producción (rama principal).</p>
+  </div>
+  <p style="font-size:26px; color:#4A5568; line-height:1.4"><b style="color:#E07A5F">Analogía:</b> localhost es el ensayo en tu cuarto; preview es el ensayo general; producción es el concierto en vivo. Un error ahí lo ven todos.</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Push → deploy</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Con la integración de Git, cada push a una rama genera un preview con su URL; integrar a main despliega producción.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Variables por entorno</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Development, Preview y Production tienen sus propios secretos. El mismo código lee la llave correcta en cada uno.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Rollback instantáneo</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Si producción falla, promueves un deployment anterior desde el panel: sin rebuild, en segundos.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Dominio y DNS</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">tuempresa.com apunta a tu deployment de producción con un registro DNS. HTTPS viene incluido.</p>
+    </div>
+  </div>
+  <aside>DEFINICIÓN EXACTA: build = compilar el proyecto a los archivos que se sirven; deployment = una build publicada con URL propia. Preview por rama o PR, con URL única y variables de entorno de Preview; producción desde la rama de producción (main por defecto) con el dominio propio. Rollback = promover un deployment anterior, sin reconstruir.
+CÓMO LO CUENTO: publicar es una decisión de ustedes, nunca automática. En el starter la regla dice que la IA no despliega sin permiso explícito. El preview existe justo para que "funciona en mi compu" se pruebe en internet sin riesgo antes de que lo vea el mundo.
+PARA SUBIR DE NIVEL: CI/CD = integrar y entregar de forma continua; en Vercel el push dispara la build. Serverless functions = tu backend corre en Vercel por petición. Edge y CDN: copias del sitio cerca del usuario. Protección de deployments (contraseña o solo el equipo) para previews. Variables: development se usa en local (.env.local), preview y production se configuran en el panel; nunca en el código. En la casa hay un release-gate: no se despliega a producción sin evidencia (CI en verde, aprobaciones, plan de rollback, estado de migraciones).
+MITO: "funciona en mi compu, funciona en producción". Localhost se salta red, seguridad y escala; por eso existe el preview.
+FUENTES: vercel.com/docs/deployments; vercel.com/docs/environment-variables; vercel.com/docs/deployments/instant-rollback.</aside>
+</section></div>
+<div class="slide"><section id="stack" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:24px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Frameworks, librerías y "el stack"</h2>
+  <div style="background:#14213D; color:#FBFBF8; border-radius:16px; padding:26px 32px; display:flex; flex-direction:column; gap:6px">
+    <p style="font-size:24px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#F0A583">Definición</p>
+    <p style="font-size:28px; line-height:1.4; color:#EEF1F6">Una librería es una colección de funciones que tu código llama. Un framework es una estructura que llama a tu código y decide el flujo. El stack es el conjunto de herramientas con que se construye y despliega una app.</p>
+  </div>
+  <p style="font-size:26px; color:#4A5568; line-height:1.4"><b style="color:#E07A5F">Analogía:</b> la librería es la caja de herramientas (tú eliges cuándo usar cada una); el framework es la receta que te dice cuándo mezclar y cuándo hornear.</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Librerías</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">React (interfaz), Tailwind (estilos), Axios (HTTP). Tú controlas el flujo; ellas resuelven una tarea.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Frameworks</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Next.js (React + rutas + servidor), Astro, Django, Laravel. El framework controla el flujo; tú llenas los huecos.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Un stack típico de vibecode</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Next.js + Supabase + Vercel: interfaz y backend, base de datos con auth, y hosting con un clic. Piezas que ya se conocen entre sí.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:22px 28px; display:flex; flex-direction:column; gap:6px">
+      <p style="font-size:26px; font-weight:600">Por qué importa para la IA</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.4">Trabaja mejor con stacks populares y bien documentados: más ejemplos, menos alucinación. Elige lo aburrido y probado.</p>
+    </div>
+  </div>
+  <aside>DEFINICIÓN EXACTA: la diferencia formal es la inversión de control: con una librería tu código llama a la librería; con un framework, el framework llama a tu código. Un stack es la combinación concreta de lenguaje, framework, base de datos, hosting y servicios que forman una app.
+CÓMO LO CUENTO: no tienen que elegir stack; la IA y el starter lo eligen. Lo que sí deben entender es que las piezas se hablan entre sí y que cambiar una a mitad de camino cuesta.
+PARA SUBIR DE NIVEL: el trade-off es velocidad vs flexibilidad: un framework saca un MVP en semanas; librerías sueltas dan control fino a cambio de más plomería. "Elige tecnología aburrida" (Dan McKinley): lo probado tiene más documentación, más respuestas y menos sorpresas; para la IA, más ejemplos en su entrenamiento. Alternativa no-code: Webflow, Lovable o Bubble para interfaces; en la casa Webflow es solo front y CMS, y los datos siempre pasan por un endpoint propio desacoplado. Dependencias: package.json lista lo que usa el proyecto; instalar, quitar o subir versiones cambia el comportamiento y en el starter se pide permiso.
+MITO: "un framework siempre es mejor que una librería". Son trade-offs distintos, no niveles.
+FUENTES: developer.mozilla.org/docs/Glossary (Library, Framework); nextjs.org/docs; boringtechnology.club.</aside>
+</section></div>
+<div class="slide"><section id="tramos" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:36px">
+  <div style="display:flex; flex-direction:column; gap:10px">
+    <h2 style="font-family:'Domine', Georgia, serif; font-size:64px; font-weight:600">El flujo, en 8 pasos</h2>
+    <p style="font-size:28px; color:#4A5568">No hay que memorizarlo: la carpeta starter y la IA te llevan por él.</p>
+  </div>
+  <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:20px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:24px; font-weight:700; color:#E07A5F">01</p>
+      <p style="font-size:28px; font-weight:600; line-height:1.2">Investigar</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">¿Ya existe? Busca antes de construir.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:24px; font-weight:700; color:#E07A5F">02</p>
+      <p style="font-size:28px; font-weight:600; line-height:1.2">Herramientas abiertas</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Ten a la mano lo que vas a usar.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:24px; font-weight:700; color:#E07A5F">03</p>
+      <p style="font-size:28px; font-weight:600; line-height:1.2">Pensar y construir</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Plan corto, luego código.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:24px; font-weight:700; color:#E07A5F">04</p>
+      <p style="font-size:28px; font-weight:600; line-height:1.2">Documentar</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Deja escrito el porqué, no solo el qué.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:24px; font-weight:700; color:#E07A5F">05</p>
+      <p style="font-size:28px; font-weight:600; line-height:1.2">Conectar el contexto</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Dale a la IA lo que necesita saber.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:24px; font-weight:700; color:#E07A5F">06</p>
+      <p style="font-size:28px; font-weight:600; line-height:1.2">Versionar</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Guarda avances con commits.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:24px; font-weight:700; color:#E07A5F">07</p>
+      <p style="font-size:28px; font-weight:600; line-height:1.2">Aislar el riesgo</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Nada de borrar o publicar sin querer.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:26px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:24px; font-weight:700; color:#E07A5F">08</p>
+      <p style="font-size:28px; font-weight:600; line-height:1.2">Publicar y medir</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35">Sácalo y mira si de verdad sirvió.</p>
+    </div>
+  </div>
+  <aside>~7 min. No los abrumes: la idea es que vean que hay un ORDEN y que la IA no improvisa. Subráyalo así: primero se piensa (1-2), luego se construye poco a poco (3-5), y siempre se protege el trabajo (6-7) antes de mostrarlo (8). Dos pasos que la gente se salta y cuestan caro: Investigar (casi todo ya existe) y Aislar el riesgo (no romper nada).</aside>
+</section></div>
+<div class="slide"><section id="sec-operar" data-transition="push" style="background:#14213D; color:#FBFBF8; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; justify-content:center; gap:24px">
+  <p style="font-size:32px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#E07A5F">Parte 3</p>
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:100px; font-weight:600; line-height:1.04">Operar con criterio</h2>
+  <p style="font-size:38px; color:#BFC9DC; width:1480px; line-height:1.3">Entender los conceptos no basta. Esto es la rutina: qué pedir, cómo saber si funciona, qué revisar antes de publicar y qué hacer cuando algo se rompe.</p>
+  <aside>Transición (~1 min). El riesgo de esta clase es que salgan pensando que ya pueden con pagos, datos y todo, solo porque entienden las palabras. Esta parte lo evita: convierte el criterio en cinco herramientas que se usan igual en cualquier proyecto. Sin esto, la clase enseña ingeniería pero no operación.</aside>
+</section></div>
+<div class="slide"><section id="preguntas-operar" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:104px 128px; display:flex; flex-direction:column; gap:22px">
+  <div style="display:flex; flex-direction:column; gap:8px">
+    <h2 style="font-family:'Domine', Georgia, serif; font-size:56px; font-weight:600">Las 6 preguntas que te vas a hacer</h2>
+    <p style="font-size:26px; color:#4A5568">Y dónde se responde cada una. Esta parte es exactamente esto.</p>
+  </div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px 24px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:24px 28px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:26px; font-style:italic; line-height:1.3">"¿Qué le pido a la IA cuando mi app se rompe?"</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35"><b style="color:#E07A5F">El rescate:</b> primero para, luego el guion de 6 pasos.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:24px 28px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:26px; font-style:italic; line-height:1.3">"¿Cómo sé si funciona de verdad y no solo se ve bonito?"</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35"><b style="color:#E07A5F">El QA humano:</b> caso feliz, de error y de límite.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:24px 28px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:26px; font-style:italic; line-height:1.3">"¿Qué debo revisar antes de publicar?"</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35"><b style="color:#E07A5F">La lista de publicación:</b> si algo no está marcado, no sale.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:24px 28px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:26px; font-style:italic; line-height:1.3">"¿Cómo recupero una versión anterior?"</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35"><b style="color:#E07A5F">Commits y rollback:</b> vuelves a la última foto buena.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:24px 28px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:26px; font-style:italic; line-height:1.3">"¿Cuándo dejo de hacerlo sola y llamo a alguien técnico?"</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35"><b style="color:#E07A5F">La escalera de riesgo:</b> rojo y negro no van solos.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:24px 28px; display:flex; flex-direction:column; gap:8px">
+      <p style="font-size:26px; font-style:italic; line-height:1.3">"¿Cómo evito que toque cinco archivos por un cambio chico?"</p>
+      <p style="font-size:24px; color:#4A5568; line-height:1.35"><b style="color:#E07A5F">El brief:</b> plan y aprobación antes de tocar nada; una cosa a la vez.</p>
+    </div>
+  </div>
+  <aside>~2 min. Abre la Parte 3 leyendo las seis preguntas en voz alta y pregunta al grupo cuáles ya se hicieron. Son las preguntas reales de operación que casi ningún curso de vibecode responde: la mayoría enseña a construir y deja a la gente sola justo aquí. El resto de la sección contesta una por una, en el mismo orden en que suelen aparecer: primero pides bien (brief), sabes hasta dónde llegar (escalera), compruebas (QA), revisas (lista) y, si algo falla, rescatas y recuperas. Cierra: "al terminar esta parte, ninguna de estas seis las enfrentan a ciegas".</aside>
+</section></div>
+<div class="slide"><section id="no-le-pidas" style="background:#E07A5F; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; justify-content:center; gap:40px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:74px; font-weight:600; line-height:1.12; width:1560px">No le pidas a la IA que "haga una app".</h2>
+  <p style="font-size:36px; color:#3A2318; line-height:1.4; width:1520px">Pídele que resuelva un problema pequeño, con un resultado que puedas ver, límites claros y una forma de probarlo.</p>
+  <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap">
+    <p style="font-size:30px; font-weight:700; background:#14213D; color:#FBFBF8; padding:16px 28px; border-radius:12px">1. Plan</p>
+    <x-shape kind="arrow-right" style="background:#3A2318; width:44px; height:32px"></x-shape>
+    <p style="font-size:30px; font-weight:700; background:#14213D; color:#FBFBF8; padding:16px 28px; border-radius:12px">2. Tu aprobación</p>
+    <x-shape kind="arrow-right" style="background:#3A2318; width:44px; height:32px"></x-shape>
+    <p style="font-size:30px; font-weight:700; background:#14213D; color:#FBFBF8; padding:16px 28px; border-radius:12px">3. Cambio pequeño</p>
+    <x-shape kind="arrow-right" style="background:#3A2318; width:44px; height:32px"></x-shape>
+    <p style="font-size:30px; font-weight:700; background:#14213D; color:#FBFBF8; padding:16px 28px; border-radius:12px">4. Prueba y guarda</p>
+  </div>
+  <aside>~3 min. Si solo se llevan UNA idea de la clase, es esta. "Haz una app" es una invitación a que el modelo invente requisitos y toque diez archivos. El antídoto es el ciclo: primero el plan (que lo diga antes de tocar nada), luego tu aprobación, luego un cambio pequeño, luego probar y guardar. Este ciclo une todo lo anterior (criterio, seguridad, Git, prompts) en algo que repiten en cada proyecto. Las tres slides que siguen son las herramientas de cada paso: el brief (para el plan), la escalera de riesgo (para saber hasta dónde solos), y el QA (para la prueba).</aside>
+</section></div>
+<div class="slide"><section id="brief" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:24px">
+  <div style="display:flex; flex-direction:column; gap:8px">
+    <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Del prompt al brief ejecutable</h2>
+    <p style="font-size:27px; color:#4A5568">Un prompt suelto deja que la IA invente. Un brief la obliga a plan, límites y una forma de comprobar.</p>
+  </div>
+  <div style="display:flex; gap:24px; align-items:stretch">
+    <div style="flex:1; background:#14213D; color:#EEF1F6; border-radius:16px; padding:34px; display:flex; flex-direction:column; gap:12px; font-family:'DM Sans', monospace">
+      <p style="font-size:25px; line-height:1.5"><b style="color:#F0A583">Problema:</b> qué le pasa a una persona real.</p>
+      <p style="font-size:25px; line-height:1.5"><b style="color:#F0A583">Resultado:</b> qué podrá hacer al terminar.</p>
+      <p style="font-size:25px; line-height:1.5"><b style="color:#F0A583">Quién lo usa</b> y <b style="color:#F0A583">alcance:</b> qué pantallas o datos sí cambian.</p>
+      <p style="font-size:25px; line-height:1.5"><b style="color:#F0A583">No cambiar:</b> qué se debe conservar.</p>
+      <p style="font-size:25px; line-height:1.5"><b style="color:#F0A583">Criterios de aceptación:</b> resultados observables, con un caso de error.</p>
+    </div>
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:34px; display:flex; flex-direction:column; gap:12px">
+      <p style="font-size:27px; font-weight:600; color:#E07A5F">Y siempre cierra con:</p>
+      <p style="font-size:25px; color:#3A4657; line-height:1.45">"Antes de escribir código: explícame el plan en máximo 8 pasos, dime qué archivos tocarías y por qué, señala riesgos, y espera mi aprobación."</p>
+      <p style="font-size:25px; color:#3A4657; line-height:1.45">"No borres, no hagas commit, push, deploy ni cambios de datos sin preguntarme. Usa datos de prueba. Al final, dime cómo verificarlo."</p>
+    </div>
+  </div>
+  <p style="font-size:26px; color:#14213D; background:#F3ECE4; border-radius:14px; padding:22px 30px; line-height:1.4">La plantilla completa está en el starter: <b>plantillas/brief-ejecutable.md</b>. Cópiala, llénala, pégala.</p>
+  <aside>~5 min. Esto aterriza "el problema, no la solución". La diferencia entre un vibecoder que sufre y uno que avanza es que el segundo escribe un brief antes de pedir. Dos partes: arriba, describir el trabajo (problema, resultado, alcance, qué NO tocar, criterios de aceptación con un caso de error); a la derecha, el cierre fijo que obliga a plan + aprobación + datos de prueba, que son las reglas de la casa hechas prompt. En vivo, llena uno con una idea real del grupo. Está en el repo como plantilla para copiar.</aside>
+</section></div>
+<div class="slide"><section id="escalera-riesgo" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:110px 128px; display:flex; flex-direction:column; gap:24px">
+  <div style="display:flex; flex-direction:column; gap:8px">
+    <h2 style="font-family:'Domine', Georgia, serif; font-size:58px; font-weight:600">La escalera de riesgo</h2>
+    <p style="font-size:26px; color:#4A5568">Hasta dónde puedes ir sola, y cuándo parar y llamar a alguien técnico.</p>
+  </div>
+  <table style="font-family:'DM Sans', Arial, sans-serif; font-size:25px; border-collapse:collapse">
+    <tr style="background:#14213D">
+      <th style="width:15%; color:#FBFBF8; text-align:left; padding:16px 20px; font-size:24px">Nivel</th>
+      <th style="width:41%; color:#FBFBF8; text-align:left; padding:16px 20px; font-size:24px">Ejemplos</th>
+      <th style="width:13%; color:#FBFBF8; text-align:left; padding:16px 20px; font-size:24px">¿Sola?</th>
+      <th style="width:31%; color:#FBFBF8; text-align:left; padding:16px 20px; font-size:24px">Regla</th>
+    </tr>
+    <tr style="background:#E6F0E6">
+      <td style="padding:16px 20px; font-weight:700; color:#2F6B3A">Verde</td>
+      <td style="padding:16px 20px; color:#2C3A2E">Landing, copy, calculadora local, formulario sin datos sensibles</td>
+      <td style="padding:16px 20px; font-weight:700; color:#2F6B3A">Sí</td>
+      <td style="padding:16px 20px; color:#2C3A2E">Trabaja en preview y publica tras revisar.</td>
+    </tr>
+    <tr style="background:#FBF0DA">
+      <td style="padding:16px 20px; font-weight:700; color:#9A6A16">Amarillo</td>
+      <td style="padding:16px 20px; color:#3A3222">Login, emails automáticos, CRM, base con datos internos</td>
+      <td style="padding:16px 20px; font-weight:700; color:#9A6A16">Con checklist</td>
+      <td style="padding:16px 20px; color:#3A3222">Usa respaldos, cuentas de prueba y revisa el cambio.</td>
+    </tr>
+    <tr style="background:#F6E1DC">
+      <td style="padding:16px 20px; font-weight:700; color:#A23B22">Rojo</td>
+      <td style="padding:16px 20px; color:#3A241F">Pagos, salud, nómina, datos personales sensibles, permisos, migraciones</td>
+      <td style="padding:16px 20px; font-weight:700; color:#A23B22">No a solas</td>
+      <td style="padding:16px 20px; color:#3A241F">Revisión técnica antes, y prueba en staging.</td>
+    </tr>
+    <tr style="background:#20242B">
+      <td style="padding:16px 20px; font-weight:700; color:#F0A583">Negro</td>
+      <td style="padding:16px 20px; color:#D7DEEA">Secretos de producción, borrado masivo, infra cloud, DNS, seguridad ofensiva</td>
+      <td style="padding:16px 20px; font-weight:700; color:#F0A583">No</td>
+      <td style="padding:16px 20px; color:#D7DEEA">Detente y escala a alguien técnico.</td>
+    </tr>
+  </table>
+  <aside>~5 min. Esta lámina convierte "no toques datos de clientes" de advertencia vaga en una decisión aplicable mañana. Léela de abajo hacia arriba para el efecto: negro y rojo son "no a solas", punto. La mayoría de proyectos de marketing viven en verde, y ahí sí son autónomas. El color también va en el texto (Verde, Amarillo...) a propósito: el color solo no comunica. Regla práctica para el grupo: si dudas de en qué nivel estás, estás al menos un nivel más arriba de lo que crees. La versión de bolsillo está en el repo: guia/escalera-de-riesgo.md.</aside>
+</section></div>
+<div class="slide"><section id="probar" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:28px">
+  <div style="display:flex; flex-direction:column; gap:10px">
+    <h2 style="font-family:'Domine', Georgia, serif; font-size:60px; font-weight:600">Probar como un humano, no como la IA</h2>
+    <p style="font-size:29px; color:#4A5568; line-height:1.4; width:1560px">Después de cada cambio, no preguntes "¿la IA terminó?". Pregunta "¿el usuario ya logra la tarea sin sorpresas?".</p>
+  </div>
+  <div style="display:flex; gap:24px">
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:40px; display:flex; flex-direction:column; gap:12px">
+      <p style="font-size:30px; font-weight:700; color:#E07A5F">Caso feliz</p>
+      <p style="font-size:27px; color:#3A4657; line-height:1.4">¿Una persona consigue el resultado esperado, de principio a fin?</p>
+    </div>
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:40px; display:flex; flex-direction:column; gap:12px">
+      <p style="font-size:30px; font-weight:700; color:#E07A5F">Caso de error</p>
+      <p style="font-size:27px; color:#3A4657; line-height:1.4">¿Qué pasa si deja un campo vacío, repite un correo o se cae la red?</p>
+    </div>
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:40px; display:flex; flex-direction:column; gap:12px">
+      <p style="font-size:30px; font-weight:700; color:#E07A5F">Caso de límite</p>
+      <p style="font-size:27px; color:#3A4657; line-height:1.4">¿Y con muchos datos, texto larguísimo, móvil pequeño o sin permisos?</p>
+    </div>
+  </div>
+  <p style="font-size:27px; color:#14213D; background:#F3ECE4; border-radius:14px; padding:24px 30px; line-height:1.4">Estas tres preguntas se contestan sin saber código, y son la puerta a los tests de verdad más adelante. En el starter viven en la skill <b>/probar</b>.</p>
+  <aside>~4 min. Este es el QA que le falta a casi todo vibecoder: se quedan en "se ve bonito" y publican algo que se rompe con el primer usuario raro. Los tres casos (feliz, error, límite) se prueban a mano, sin código. Feliz = el camino ideal. Error = lo que hace un humano distraído. Límite = los extremos (mucho, poco, chico, sin permiso). En vivo, aplica los tres al proyecto que estén construyendo. Es coherente con cómo se evalúan agentes: tarea bien definida y prueba completa de lo que produce, no solo de que "respondió".</aside>
+</section></div>
+<div class="slide"><section id="antes-de-publicar" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:110px 128px; display:flex; flex-direction:column; gap:24px">
+  <div style="display:flex; flex-direction:column; gap:8px">
+    <h2 style="font-family:'Domine', Georgia, serif; font-size:58px; font-weight:600">Antes de publicar: la lista</h2>
+    <p style="font-size:26px; color:#4A5568">"Ya quedó" no lo decide la IA. Lo decide esta lista. Si algo no está marcado, no se publica.</p>
+  </div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px 40px">
+    <div style="display:flex; align-items:flex-start; gap:16px"><x-icon name="Check" style="color:#2F6B3A; width:34px; height:34px"></x-icon><p style="font-size:26px; flex:1; line-height:1.35">Puedo decir en una frase qué problema resuelve.</p></div>
+    <div style="display:flex; align-items:flex-start; gap:16px"><x-icon name="Check" style="color:#2F6B3A; width:34px; height:34px"></x-icon><p style="font-size:26px; flex:1; line-height:1.35">Lo probé en preview como usuaria real.</p></div>
+    <div style="display:flex; align-items:flex-start; gap:16px"><x-icon name="Check" style="color:#2F6B3A; width:34px; height:34px"></x-icon><p style="font-size:26px; flex:1; line-height:1.35">Probé el caso normal y un error esperable.</p></div>
+    <div style="display:flex; align-items:flex-start; gap:16px"><x-icon name="Check" style="color:#2F6B3A; width:34px; height:34px"></x-icon><p style="font-size:26px; flex:1; line-height:1.35">Lo revisé en móvil y en escritorio.</p></div>
+    <div style="display:flex; align-items:flex-start; gap:16px"><x-icon name="Check" style="color:#2F6B3A; width:34px; height:34px"></x-icon><p style="font-size:26px; flex:1; line-height:1.35">No hay llaves ni datos privados en Git.</p></div>
+    <div style="display:flex; align-items:flex-start; gap:16px"><x-icon name="Check" style="color:#2F6B3A; width:34px; height:34px"></x-icon><p style="font-size:26px; flex:1; line-height:1.35">Sé cómo volver a la versión anterior.</p></div>
+    <div style="display:flex; align-items:flex-start; gap:16px"><x-icon name="Check" style="color:#2F6B3A; width:34px; height:34px"></x-icon><p style="font-size:26px; flex:1; line-height:1.35">El formulario envía los datos al lugar correcto.</p></div>
+    <div style="display:flex; align-items:flex-start; gap:16px"><x-icon name="Check" style="color:#2F6B3A; width:34px; height:34px"></x-icon><p style="font-size:26px; flex:1; line-height:1.35">Otra persona lo usó sin que yo le explicara.</p></div>
+  </div>
+  <p style="font-size:26px; color:#14213D; background:#F3ECE4; border-radius:14px; padding:22px 30px; line-height:1.4">Está en el starter como <b>plantillas/antes-de-publicar.md</b>. Para una app con login, suma: cuentas de prueba, cierre de sesión, permisos y aislamiento de datos.</p>
+  <aside>~4 min. Definition of Done para no-devs. El punto que más cuesta y más importa: "otra persona lo usó sin que yo explicara" (si depende de ti para siempre, no sirve, vuelve a la pregunta 4 del criterio) y "sé cómo volver atrás". La casilla de llaves conecta con la slide de secretos. En vivo, pásale esta lista al proyecto que hayan construido antes de siquiera pensar en producción. Vive en el repo como plantilla.</aside>
+</section></div>
+<div class="slide"><section id="rescate" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:110px 128px; display:flex; flex-direction:column; gap:24px">
+  <div style="display:flex; flex-direction:column; gap:8px">
+    <h2 style="font-family:'Domine', Georgia, serif; font-size:58px; font-weight:600">Cuando algo se rompe: el rescate</h2>
+    <p style="font-size:26px; color:#4A5568; width:1540px; line-height:1.4">El error más caro del vibecode es encadenar prompts desesperados. Cada uno rompe más. El guion es al revés: primero para.</p>
+  </div>
+  <div style="display:flex; flex-direction:column; gap:12px">
+    <div style="display:flex; align-items:center; gap:24px; background:#3A1D16; color:#FBEEE9; border-radius:14px; padding:22px 32px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:36px; font-weight:600; color:#F0A583; width:48px">1</p>
+      <p style="font-size:28px; flex:1; line-height:1.35">Para. No pidas otro arreglo improvisado.</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:24px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:20px 32px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:34px; font-weight:600; color:#E07A5F; width:48px">2</p>
+      <p style="font-size:27px; flex:1; line-height:1.35">Captura el error y copia el mensaje exacto.</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:24px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:20px 32px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:34px; font-weight:600; color:#E07A5F; width:48px">3</p>
+      <p style="font-size:27px; flex:1; line-height:1.35">Identifica dónde estás: localhost, preview o producción.</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:24px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:20px 32px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:34px; font-weight:600; color:#E07A5F; width:48px">4</p>
+      <p style="font-size:27px; flex:1; line-height:1.35">Si es producción, vuelve al deployment anterior (rollback). Primero salva a los usuarios.</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:24px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:20px 32px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:34px; font-weight:600; color:#E07A5F; width:48px">5</p>
+      <p style="font-size:27px; flex:1; line-height:1.35">Cuéntale a la IA qué cambiaste, qué esperabas, qué pasó y cómo reproducirlo.</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:24px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:14px; padding:20px 32px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:34px; font-weight:600; color:#E07A5F; width:48px">6</p>
+      <p style="font-size:27px; flex:1; line-height:1.35">Arregla en una rama o preview, nunca directo en producción.</p>
+    </div>
+  </div>
+  <aside>~4 min. Nombra el patrón dañino en voz alta: "la app se rompió, le pido a la IA que lo arregle, se rompe más, le pido otra vez... y termina peor y más enredada". El paso 1 (parar) es el que cuesta y el que salva. El paso 4 separa dos urgencias: en producción, primero rollback (los usuarios), después investigar con calma. El paso 5 es el mismo formato de un buen reporte de bug. En el repo es la skill /rescate. Conecta con la escalera: si el rescate te lleva a algo rojo o negro, escalas.</aside>
+</section></div>
+<div class="slide"><section id="sec-manos" data-transition="push" style="background:#E07A5F; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; justify-content:center; gap:24px">
+  <p style="font-size:32px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#3A2318">Parte 4</p>
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:106px; font-weight:600; line-height:1.04">Tu primer vibecode</h2>
+  <p style="font-size:38px; color:#3A2318; width:1300px; line-height:1.3">De la idea a algo que funciona. En vivo, todos a la vez.</p>
+  <aside>Transición. Aquí abren Cursor con la carpeta starter. El objetivo de los próximos 20 min no es terminar un producto: es perder el miedo a pedir y a revisar.</aside>
+</section></div>
+<div class="slide"><section id="starter" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:40px">
+  <div style="display:flex; flex-direction:column; gap:12px">
+    <h2 style="font-family:'Domine', Georgia, serif; font-size:64px; font-weight:600">Tu punto de partida: la carpeta "starter"</h2>
+    <p style="font-size:30px; color:#4A5568; line-height:1.4; width:1560px">Te la damos lista. Adentro hay unas "reglas de la casa" que le enseñan a la IA a tratarte como alguien que NO es dev: te explica, va despacio y nunca borra ni publica sin preguntarte.</p>
+  </div>
+  <div style="display:flex; gap:28px">
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:40px; display:flex; flex-direction:column; gap:12px">
+      <p style="font-size:30px; font-weight:700; color:#E07A5F">Cursor</p>
+      <p style="font-size:28px; color:#4A5568; line-height:1.4">El programa donde vas a trabajar. Un editor con IA adentro. Gratis.</p>
+    </div>
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:40px; display:flex; flex-direction:column; gap:12px">
+      <p style="font-size:30px; font-weight:700; color:#E07A5F">Las reglas</p>
+      <p style="font-size:28px; color:#4A5568; line-height:1.4">Le dicen a la IA cómo hablarte y qué nunca hacer sin tu permiso.</p>
+    </div>
+    <div style="flex:1; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:40px; display:flex; flex-direction:column; gap:12px">
+      <p style="font-size:30px; font-weight:700; color:#E07A5F">Ejemplos</p>
+      <p style="font-size:28px; color:#4A5568; line-height:1.4">Ideas de primer proyecto pensadas para ventas y marketing.</p>
+    </div>
+  </div>
+  <aside>~4 min. Guíalos en vivo: 1) instalar Cursor, 2) File → Open Folder → la carpeta starter, 3) abrir el chat con Cmd/Ctrl + L. Recalca que las reglas ya están puestas: no tienen que configurar nada, la IA ya sabe tratarlos bien.</aside>
+</section></div>
+<div class="slide"><section id="metodo" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:34px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:64px; font-weight:600">Cómo pedirlo: el método de 4 pasos</h2>
+  <div style="display:flex; flex-direction:column; gap:18px">
+    <div style="display:flex; align-items:flex-start; gap:32px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:28px 36px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:44px; font-weight:600; color:#E07A5F; width:54px">1</p>
+      <div style="display:flex; flex-direction:column; gap:8px; flex:1">
+        <p style="font-size:32px; font-weight:600">Explica el problema, no la solución</p>
+        <p style="font-size:26px; color:#4A5568; line-height:1.4">"Pierdo tiempo escribiendo el primer mensaje a cada prospecto", no "hazme un HTML con un div".</p>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-start; gap:32px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:28px 36px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:44px; font-weight:600; color:#E07A5F; width:54px">2</p>
+      <div style="display:flex; flex-direction:column; gap:8px; flex:1">
+        <p style="font-size:32px; font-weight:600">Deja que la IA busque antes de construir</p>
+        <p style="font-size:26px; color:#4A5568; line-height:1.4">Pregúntale: "¿ya existe algo simple para esto?".</p>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-start; gap:32px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:28px 36px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:44px; font-weight:600; color:#E07A5F; width:54px">3</p>
+      <div style="display:flex; flex-direction:column; gap:8px; flex:1">
+        <p style="font-size:32px; font-weight:600">Pide un plan de media página antes de construir</p>
+        <p style="font-size:26px; color:#4A5568; line-height:1.4">"Dime qué vas a hacer y qué voy a ver." Apruébalo o ajústalo.</p>
+      </div>
+    </div>
+    <div style="display:flex; align-items:flex-start; gap:32px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:28px 36px">
+      <p style="font-family:'Domine', Georgia, serif; font-size:44px; font-weight:600; color:#E07A5F; width:54px">4</p>
+      <div style="display:flex; flex-direction:column; gap:8px; flex:1">
+        <p style="font-size:32px; font-weight:600">Construye sobre lo que ya existe</p>
+        <p style="font-size:26px; color:#4A5568; line-height:1.4">Poco a poco, revisando cada paso. Una cosa a la vez.</p>
+      </div>
+    </div>
+  </div>
+  <aside>~6 min. Este es el guion que repiten siempre. El paso 3 es el que más los protege: obligar a la IA a decir su plan ANTES de tocar nada les da el control. Y el mantra del paso 4: una cosa a la vez. Si piden diez cosas de golpe, pierden el hilo.</aside>
+</section></div>
+<div class="slide"><section id="ideas" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:36px">
+  <div style="display:flex; flex-direction:column; gap:10px">
+    <h2 style="font-family:'Domine', Georgia, serif; font-size:64px; font-weight:600">Elige UNA idea para hoy</h2>
+    <p style="font-size:28px; color:#4A5568">No la más ambiciosa: la que te resuelve algo esta semana.</p>
+  </div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:26px">
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:36px; display:flex; flex-direction:column; gap:10px">
+      <p style="font-size:32px; font-weight:600">Landing de campaña</p>
+      <p style="font-size:26px; color:#4A5568; line-height:1.4">Una página de una pantalla con tu propuesta y un botón a WhatsApp, form o Calendly.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:36px; display:flex; flex-direction:column; gap:10px">
+      <p style="font-size:32px; font-weight:600">Generador de mensajes de outreach</p>
+      <p style="font-size:26px; color:#4A5568; line-height:1.4">Pegas nombre, empresa y un dato → 3 variantes de primer mensaje con tu tono.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:36px; display:flex; flex-direction:column; gap:10px">
+      <p style="font-size:32px; font-weight:600">Calculadora para el prospecto</p>
+      <p style="font-size:26px; color:#4A5568; line-height:1.4">"Cuánto ahorras / ganas con X." Mete sus números y ve el resultado. Un imán de conversación.</p>
+    </div>
+    <div style="background:#FFFFFF; border:1px solid #E3E6EC; border-radius:20px; padding:36px; display:flex; flex-direction:column; gap:10px">
+      <p style="font-size:32px; font-weight:600">Limpiador de listas</p>
+      <p style="font-size:26px; color:#4A5568; line-height:1.4">Pegas una lista de contactos desordenada → organizada y sin duplicados.</p>
+    </div>
+  </div>
+  <aside>~4 min. Que cada quien elija una en voz alta y la formule con el paso 1 del método (el problema, no la solución). Estas cuatro están en ejemplos/primer-proyecto.md dentro del starter. La consigna: terminar la clase con algo pequeño que funcione, no con algo perfecto.</aside>
+</section></div>
+<div class="slide"><section id="sec-seguridad" data-transition="push" style="background:#14213D; color:#FBFBF8; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; justify-content:center; gap:24px">
+  <p style="font-size:32px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#E07A5F">Parte 5</p>
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:106px; font-weight:600; line-height:1.04">No romper nada</h2>
+  <p style="font-size:38px; color:#BFC9DC; width:1420px; line-height:1.3">La regla de oro: ante la duda, para y pregunta. Prefiero una pregunta a un desastre.</p>
+  <aside>Transición. La razón #1 por la que la gente no se atreve a vibecodear es el miedo a romper algo. Esta parte lo desactiva.</aside>
+</section></div>
+<div class="slide"><section id="reglas-casa" style="background:#FBFBF8; color:#14213D; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; gap:36px">
+  <h2 style="font-family:'Domine', Georgia, serif; font-size:64px; font-weight:600">La IA nunca hace esto sin preguntarte</h2>
+  <div style="display:flex; flex-direction:column; gap:18px">
+    <div style="display:flex; align-items:center; gap:28px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:28px 36px">
+      <x-icon name="Lock" style="color:#E07A5F; width:44px; height:44px"></x-icon>
+      <p style="font-size:32px; flex:1; line-height:1.3">Nunca borra archivos ni contenido sin confirmártelo.</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:28px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:28px 36px">
+      <x-icon name="Lock" style="color:#E07A5F; width:44px; height:44px"></x-icon>
+      <p style="font-size:32px; flex:1; line-height:1.3">Nunca publica ni sube nada a internet sin tu permiso.</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:28px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:28px 36px">
+      <x-icon name="Lock" style="color:#E07A5F; width:44px; height:44px"></x-icon>
+      <p style="font-size:32px; flex:1; line-height:1.3">Nunca toca contraseñas, llaves ni datos de clientes.</p>
+    </div>
+    <div style="display:flex; align-items:center; gap:28px; background:#FFFFFF; border:1px solid #E3E6EC; border-radius:16px; padding:28px 36px">
+      <x-icon name="Warning" style="color:#E07A5F; width:44px; height:44px"></x-icon>
+      <p style="font-size:32px; flex:1; line-height:1.3">Si algo puede salir mal, te avisa antes. Y si no sabe, te lo dice.</p>
+    </div>
+  </div>
+  <aside>~5 min. Esto ya está escrito en las reglas de la casa del starter; no tienen que hacer nada para activarlo. Cierra con las dos ideas que dan tranquilidad: 1) hacen commits seguido, así siempre pueden volver atrás; 2) todo funciona primero en su compu, nada sale a internet hasta que ellos lo decidan.</aside>
+</section></div>
+<div class="slide"><section id="cierre" style="background:#14213D; color:#FBFBF8; font-family:'DM Sans', Arial, sans-serif; padding:128px; display:flex; flex-direction:column; justify-content:space-between">
+  <div style="display:flex; flex-direction:column; gap:32px">
+    <h2 style="font-family:'Domine', Georgia, serif; font-size:72px; font-weight:600">Qué sigue</h2>
+    <div style="display:flex; flex-direction:column; gap:16px">
+      <p style="font-size:34px; color:#E4E9F2"><b style="color:#E07A5F">1.</b>&nbsp;&nbsp;Instala Cursor y abre la carpeta starter.</p>
+      <p style="font-size:34px; color:#E4E9F2"><b style="color:#E07A5F">2.</b>&nbsp;&nbsp;Elige UNA idea que te resuelva algo esta semana.</p>
+      <p style="font-size:34px; color:#E4E9F2"><b style="color:#E07A5F">3.</b>&nbsp;&nbsp;Empieza por el problema, no por el código.</p>
+      <p style="font-size:34px; color:#E4E9F2"><b style="color:#E07A5F">4.</b>&nbsp;&nbsp;Una cosa a la vez. Guarda seguido. Pregunta ante la duda.</p>
+    </div>
+  </div>
+  <div style="display:flex; flex-direction:column; gap:14px">
+    <h3 style="font-family:'Domine', Georgia, serif; font-size:52px; font-weight:500; color:#FBFBF8; line-height:1.2; width:1400px">"La IA trae el código. El criterio lo traes tú."</h3>
+    <p style="font-size:26px; color:#8C9AB5">Y ese criterio ya lo tienes.</p>
+  </div>
+  <aside>~2 min. Cierre. Repite la promesa del inicio: no salieron programadores, salieron con criterio y con una herramienta. Deja la tarea concreta: esta semana, terminar la idea que eligieron hoy. Abre a preguntas.</aside>
+</section></div>
+</div>
+<div id="hud">
+  <button id="prev" aria-label="Anterior">‹</button>
+  <span class="count"><span id="cur">1</span> / 36</span>
+  <button id="next" aria-label="Siguiente">›</button>
+  <span class="hint">← → navegar · N notas · F pantalla completa</span>
+</div>
+<div id="notes"></div>
+<script>
+const ICONS = {
+  Check: '<path d="M20 6 9 17l-5-5"/>',
+  Warning: '<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  Lock: '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  Lightbulb: '<path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.3 1 2.3h6c0-1 .4-1.8 1-2.3A7 7 0 0 0 12 2z"/>'
+};
+// Reemplaza <x-icon name> por SVG inline, conservando color y tamaño del style inline.
+document.querySelectorAll('x-icon').forEach(el => {
+  const name = el.getAttribute('name');
+  if (!ICONS[name]) return;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox','0 0 24 24');
+  svg.setAttribute('fill','none');
+  svg.setAttribute('stroke','currentColor');
+  svg.setAttribute('stroke-width','2');
+  svg.setAttribute('stroke-linecap','round');
+  svg.setAttribute('stroke-linejoin','round');
+  if (el.getAttribute('style')) svg.setAttribute('style', el.getAttribute('style'));
+  svg.innerHTML = ICONS[name];
+  el.replaceWith(svg);
+});
+
+const slides = [...document.querySelectorAll('.slide')];
+const notesEl = document.getElementById('notes');
+const curEl = document.getElementById('cur');
+let i = 0;
+
+function fit() {
+  const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+  slides.forEach(sl => sl.style.transform = `translate(-50%,-50%) scale(${s})`);
+}
+function show(n) {
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach((sl, k) => sl.classList.toggle('active', k === i));
+  curEl.textContent = i + 1;
+  const aside = slides[i].querySelector('section aside');
+  notesEl.textContent = aside ? aside.textContent.trim() : '';
+  location.hash = i + 1;
+}
+function next(){ show(i + 1); }
+function prev(){ show(i - 1); }
+
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { next(); e.preventDefault(); }
+  else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { prev(); e.preventDefault(); }
+  else if (e.key === 'Home') show(0);
+  else if (e.key === 'End') show(slides.length - 1);
+  else if (e.key.toLowerCase() === 'n') notesEl.classList.toggle('on');
+  else if (e.key.toLowerCase() === 'f') { document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); }
+});
+document.getElementById('next').onclick = next;
+document.getElementById('prev').onclick = prev;
+addEventListener('resize', fit);
+fit();
+show(parseInt(location.hash.slice(1)) - 1 || 0);
+</script>
+</body>
+</html>

@@ -15,6 +15,7 @@ Tú traes el problema y el criterio; la IA trae el código.
 - `guia/`: los fundamentos de la clase por escrito y la escalera de riesgo, para consultar.
 - `plantillas/`: el brief ejecutable y la lista de "antes de publicar", para copiar y llenar.
 - `ejemplos/`: ideas de primer proyecto pensadas para ventas y marketing.
+- `presentacion/`: la clase completa en un HTML que abres con doble clic.
 - `.env.example`: la plantilla de dónde van las llaves y contraseñas (nunca en el código).
 
 No hay nada que instalar dentro de la carpeta.
