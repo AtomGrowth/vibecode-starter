@@ -1,0 +1,4 @@
+# archivos temporales y secretos — no subir a internet
+.env
+node_modules/
+.DS_Store
