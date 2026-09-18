@@ -10,9 +10,10 @@ Tú traes el problema y el criterio; la IA trae el código.
 
 - `CLAUDE.md` / `.cursorrules`: las reglas de la casa. Le enseñan a la IA a tratarte como alguien
   que no es dev: te explica, va despacio y nunca borra ni publica sin preguntarte.
-- `.cursor/skills/` y `.claude/skills/`: once guías paso a paso que la IA sigue cuando le pides
+- `.cursor/skills/` y `.claude/skills/`: trece guías paso a paso que la IA sigue cuando le pides
   algo. Son las mismas en las dos carpetas: una para Cursor y otra para Claude Code.
-- `guia/`: los fundamentos de la clase por escrito, para consultar cuando una palabra no te suene.
+- `guia/`: los fundamentos de la clase por escrito y la escalera de riesgo, para consultar.
+- `plantillas/`: el brief ejecutable y la lista de "antes de publicar", para copiar y llenar.
 - `ejemplos/`: ideas de primer proyecto pensadas para ventas y marketing.
 - `.env.example`: la plantilla de dónde van las llaves y contraseñas (nunca en el código).
 
@@ -37,7 +38,9 @@ Escribe `/` en el chat y elige una. También se activan solas cuando lo que pide
 | Averiguar cómo funciona algo antes de construirlo   | `/investigar`   |
 | Traer a tu compu un proyecto de otro para aprender  | `/clonar`       |
 | Construir, una cosa a la vez                        | `/construir`    |
+| Comprobar que funciona de verdad, no solo bonito    | `/probar`       |
 | Arreglar algo que se rompió                         | `/arreglar`     |
+| Recuperar el control cuando todo se rompe y empeora | `/rescate`      |
 | Guardar tu avance y poder volver atrás              | `/guardar`      |
 | Manejar llaves, contraseñas y datos sensibles       | `/secretos`     |
 | Conectar la IA a Slack, Gmail, una base de datos    | `/conectar`     |

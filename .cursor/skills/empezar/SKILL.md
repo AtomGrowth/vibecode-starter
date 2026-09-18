@@ -30,13 +30,20 @@ buen resultado.
 
 ## Paso 3. El plan de media página
 
-Si sí vale la pena, escribe un plan corto y espera aprobación antes de crear un solo archivo:
+Si sí vale la pena, escribe un plan corto y espera aprobación antes de crear un solo archivo. Usa
+la plantilla `plantillas/brief-ejecutable.md`, que ya trae el formato: problema, resultado esperado,
+quién lo usa, alcance, qué NO cambiar, criterios de aceptación y el cierre que te obliga a plan y
+aprobación. En corto, el plan tiene:
 
 - **Qué vamos a construir**: una frase.
 - **Qué va a ver la persona cuando esté listo**: describe la pantalla o el resultado, sin jerga.
 - **Pasos**: de 3 a 6, cada uno algo que se puede ver funcionando.
 - **Qué NO incluye**: para no crecer sin querer.
 - **Qué necesito de ti**: textos, datos, una cuenta, una llave (que ella gestiona, no tú).
+
+Antes de arrancar, ubica el proyecto en la escalera de riesgo (`guia/escalera-de-riesgo.md`): si cae
+en rojo o negro (pagos, datos sensibles, permisos, infraestructura), dilo y recomienda revisión
+técnica antes de construir. Verde y amarillo se pueden hacer aquí.
 
 Pregunta: "¿Empezamos con el paso 1?". Solo con el sí, pasa a `/construir`.
 

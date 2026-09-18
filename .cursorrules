@@ -12,7 +12,8 @@ y el criterio, la IA trae el código. Estas son las reglas de la casa.
 ## Usa las skills
 - Hay guías paso a paso en `.cursor/skills/` (Cursor) y `.claude/skills/` (Claude Code). Cuando lo
   que pido encaje con una, síguela. El orden natural de un proyecto es: empezar, investigar,
-  clonar, construir, arreglar, guardar, secretos, conectar, crear-skill, crear-mcp, publicar.
+  clonar, construir, probar, arreglar, rescate, guardar, secretos, conectar, crear-skill, crear-mcp,
+  publicar.
 - Si no sabes por dónde empezar, propón `/empezar`.
 
 ## Antes de construir, pregúntame (o pregúntate) esto

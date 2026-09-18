@@ -11,13 +11,18 @@ todo el mundo). Nada llega a producción sin un sí explícito.
 
 ## Antes de publicar
 
-Revisa en voz alta, punto por punto:
+Recorre la lista completa de `plantillas/antes-de-publicar.md` con la persona. Es la Definition of
+Done: si algo no está marcado, no se publica. Los puntos que nunca se saltan:
 
-- ¿Funciona en localhost lo que se va a publicar? Si no, `/arreglar` primero.
+- ¿Funciona en preview lo que se va a publicar, probado con `/probar` (caso feliz, error y límite)?
+  Si no, `/arreglar` primero.
 - ¿Está guardado? Si hay cambios sin commit, `/guardar`.
+- ¿Sabe la persona cómo volver a la versión anterior si algo sale mal?
 - ¿Hay llaves en el código? No debe haber ninguna. Las llaves van en el panel de Vercel
   (`/secretos`).
 - ¿Hay datos de clientes en el proyecto (archivos, semillas, capturas)? Fuera antes de subir.
+- ¿En qué nivel de la escalera de riesgo está esto (`guia/escalera-de-riesgo.md`)? Si es rojo o
+  negro, no se publica sola: revisión técnica antes.
 - ¿La persona tiene cuenta en Vercel y en GitHub? Si no, guía la creación; ella se registra, tú no
   manejas credenciales.
 
