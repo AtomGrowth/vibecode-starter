@@ -20,6 +20,56 @@ Tú traes el problema y el criterio; la IA trae el código.
 
 No hay nada que instalar dentro de la carpeta.
 
+## Cómo instalarlo
+
+En **Cursor** y **Claude Code** las skills y las reglas se cargan solas al abrir la carpeta. En
+**Claude web** el mecanismo es distinto (se arma un Proyecto con las reglas como instrucciones).
+
+### Cursor (lo que usamos en la clase)
+
+`Clone Repository` con la URL `https://github.com/AtomGrowth/vibecode-starter.git`, abre la carpeta,
+y sigue los cinco pasos de abajo. Lee `.cursor/skills/` solo.
+
+### Claude Code
+
+Dos líneas en la terminal, clonar y entrar:
+
+```bash
+git clone https://github.com/AtomGrowth/vibecode-starter.git
+cd vibecode-starter && claude
+```
+
+Al arrancar `claude` dentro de la carpeta se cargan las reglas (`CLAUDE.md`) y las 13 skills. Pega
+esto como primer mensaje:
+
+```
+Estoy empezando a vibecodear y no soy técnica. Confírmame que cargaste las reglas
+de la casa (CLAUDE.md) y lista las skills que tengo en .claude/skills, con una
+línea de qué hace cada una, en español simple. No construyas ni modifiques nada
+todavía: solo cuando yo diga /empezar, guíame paso a paso con las 4 preguntas.
+```
+
+### Claude web (claude.ai)
+
+Aquí las skills no se cargan solas: eso es del editor local. La forma equivalente es un **Proyecto**
+con las reglas como instrucciones:
+
+1. claude.ai → **Projects** → **New project**.
+2. Copia el contenido de `CLAUDE.md` y pégalo en **Set custom instructions** del proyecto.
+3. Sube como Project knowledge las carpetas `guia/` y `plantillas/` (y las skills de `.claude/skills/`
+   que más uses).
+
+Pega esto en el primer mensaje del proyecto:
+
+```
+Estas instrucciones son mis reglas de la casa: trátame como alguien que no es
+dev, explícame antes de hacer, ve una cosa a la vez y nunca borres, publiques ni
+toques llaves sin preguntarme. Cuando te pida algo, primero aplica las 4 preguntas
+antes de construir y sigue el método: problema (no solución) → investiga si ya
+existe → plan corto que yo apruebo → construir en pasos. Empecemos: pregúntame qué
+quiero lograr.
+```
+
 ## Empezar en 5 pasos
 
 1. Instala [Cursor](https://cursor.com). Es un editor de texto con la IA adentro. Gratis.
