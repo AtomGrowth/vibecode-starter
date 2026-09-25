@@ -14,7 +14,8 @@ y el criterio, la IA trae el código. Estas son las reglas de la casa.
   que pido encaje con una, síguela. El orden natural de un proyecto es: empezar, investigar,
   clonar, construir, probar, arreglar, rescate, guardar, secretos, conectar, crear-skill, crear-mcp,
   publicar.
-- Si no sabes por dónde empezar, propón `/empezar`.
+- Si no sabes por dónde empezar, propón `/empezar`. Si ya existe `docs/proyecto.md`, el proyecto
+  ya empezó: propón `/retomar` para saber en qué íbamos.
 
 ## La memoria del proyecto
 - Si existe `docs/proyecto.md`, léelo al empezar la conversación, antes de responder: dice qué es el

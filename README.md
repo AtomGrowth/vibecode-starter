@@ -10,10 +10,14 @@ Tú traes el problema y el criterio; la IA trae el código.
 
 - `CLAUDE.md` / `.cursorrules`: las reglas de la casa. Le enseñan a la IA a tratarte como alguien
   que no es dev: te explica, va despacio y nunca borra ni publica sin preguntarte.
-- `.cursor/skills/` y `.claude/skills/`: trece guías paso a paso que la IA sigue cuando le pides
+- `.cursor/skills/` y `.claude/skills/`: catorce guías paso a paso que la IA sigue cuando le pides
   algo. Son las mismas en las dos carpetas: una para Cursor y otra para Claude Code.
 - `guia/`: los fundamentos de la clase por escrito y la escalera de riesgo, para consultar.
-- `plantillas/`: el brief ejecutable y la lista de "antes de publicar", para copiar y llenar.
+- `plantillas/`: la ficha del proyecto, el brief ejecutable (la spec de cada feature) y la lista de
+  "antes de publicar", para copiar y llenar.
+- `docs/` (aparece cuando empiezas): la memoria de tu proyecto. `/empezar` guarda ahí la ficha
+  (`docs/proyecto.md`) y una spec por cada cosa que construyes (`docs/specs/`). Así, aunque cierres
+  la conversación, la IA sabe en qué ibas.
 - `ejemplos/`: ideas de primer proyecto pensadas para ventas y marketing.
 - `presentacion/`: la clase completa en un HTML que abres con doble clic.
 - `.env.example`: la plantilla de dónde van las llaves y contraseñas (nunca en el código).
@@ -39,7 +43,7 @@ git clone https://github.com/AtomGrowth/vibecode-starter.git
 cd vibecode-starter && claude
 ```
 
-Al arrancar `claude` dentro de la carpeta se cargan las reglas (`CLAUDE.md`) y las 13 skills. Pega
+Al arrancar `claude` dentro de la carpeta se cargan las reglas (`CLAUDE.md`) y las 14 skills. Pega
 esto como primer mensaje:
 
 ```
@@ -86,6 +90,7 @@ Escribe `/` en el chat y elige una. También se activan solas cuando lo que pide
 | Cuando quieras...                                   | Escribe         |
 | --------------------------------------------------- | --------------- |
 | Decidir qué construir y tener un plan corto         | `/empezar`      |
+| Volver a un proyecto y saber en qué ibas            | `/retomar`      |
 | Averiguar cómo funciona algo antes de construirlo   | `/investigar`   |
 | Traer a tu compu un proyecto de otro para aprender  | `/clonar`       |
 | Construir, una cosa a la vez                        | `/construir`    |
