@@ -55,6 +55,7 @@ estas reglas, en este orden (la primera que se cumple manda):
    está en "Aprendizajes y pendientes".
 2. Su rama ya se integró a `main`: terminada.
 3. Tiene rama y no se ha integrado a `main`: en construcción. El avance (las casillas) está en la rama.
+   Si la spec de la rama ya dice `Estado: terminada`, está lista y solo falta integrarla.
 4. La spec está en `main` y no tiene rama: aprobada, sin empezar.
 
 ## Por qué existe

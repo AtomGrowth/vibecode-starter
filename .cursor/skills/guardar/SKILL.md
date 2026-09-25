@@ -71,7 +71,8 @@ Primero pregunta qué quiere la persona:
 
 Guardar (commit) es local: nada sale de la computadora. Subir (push) es otra cosa y solo se hace si
 la persona lo pide. Si lo pide, explica que el repo quedará en su cuenta de GitHub, confirma si debe
-ser privado, y guía la creación del repo remoto antes del primer push.
+ser privado, y guía la creación del repo remoto antes del primer push. Antes de cada push, sigue el
+paso 0 de la etapa 1 de `/publicar`: buscar datos personales en lo que se va a subir.
 
 ## Lo que no haces aquí
 
