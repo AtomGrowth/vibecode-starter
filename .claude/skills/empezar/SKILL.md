@@ -6,7 +6,7 @@ description: Decidir qué construir y tener un plan corto antes de tocar código
 # Empezar: del problema al plan
 
 Tú no construyes todavía. Primero ayudas a pensar. El objetivo es salir de aquí con una decisión
-clara (construir o no) y, si es que sí, un plan de media página aprobado.
+clara (construir o no) y, si es que sí, una spec aprobada y guardada en el proyecto.
 
 ## Paso 1. Escucha el problema, no la solución
 
@@ -28,27 +28,58 @@ Si alguna respuesta dice "no vale la pena", dilo con claridad y propón la alter
 (una hoja de cálculo, una plantilla, una herramienta que ya existe). No construir también es un
 buen resultado.
 
-## Paso 3. El plan de media página
+## Paso 3. La ficha del proyecto (solo la primera vez)
 
-Si sí vale la pena, escribe un plan corto y espera aprobación antes de crear un solo archivo. Usa
-la plantilla `plantillas/brief-ejecutable.md`, que ya trae el formato: problema, resultado esperado,
-quién lo usa, alcance, qué NO cambiar, criterios de aceptación y el cierre que te obliga a plan y
-aprobación. En corto, el plan tiene:
+Si ya existe `docs/proyecto.md`, léela y salta al paso 4: esta es una feature nueva de un proyecto que
+ya existe.
 
-- **Qué vamos a construir**: una frase.
-- **Qué va a ver la persona cuando esté listo**: describe la pantalla o el resultado, sin jerga.
-- **Pasos**: de 3 a 6, cada uno algo que se puede ver funcionando.
-- **Qué NO incluye**: para no crecer sin querer.
-- **Qué necesito de ti**: textos, datos, una cuenta, una llave (que ella gestiona, no tú).
+Si no existe, explica por qué hace falta: "la IA no recuerda nada entre conversaciones; esta ficha es
+la memoria del proyecto". Llénala con la persona usando `plantillas/proyecto.md`. Dos partes que
+decides tú y explicas en español simple:
 
-Antes de arrancar, ubica el proyecto en la escalera de riesgo (`guia/escalera-de-riesgo.md`): si cae
-en rojo o negro (pagos, datos sensibles, permisos, infraestructura), dilo y recomienda revisión
-técnica antes de construir. Verde y amarillo se pueden hacer aquí.
+- **Nivel de riesgo**: ubícalo en la escalera (`guia/escalera-de-riesgo.md`). Si cae en rojo o
+  negro (pagos, datos sensibles, permisos, infraestructura), dilo y recomienda revisión técnica
+  antes de construir. Verde y amarillo se pueden hacer aquí.
+- **Con qué está hecho**: propón lo más simple, popular y bien documentado que resuelva el problema,
+  y di por qué en una frase. Queda escrito para que nadie lo cambie a mitad del camino sin decidirlo.
 
-Pregunta: "¿Empezamos con el paso 1?". Solo con el sí, pasa a `/construir`.
+## Paso 4. La spec de la feature
+
+Escribe el plan con el formato de `plantillas/brief-ejecutable.md`: problema, resultado esperado,
+quién lo usa, alcance, qué NO cambiar, criterios numerados (C1, C2...) con la forma
+"Cuando..., entonces..." y de 3 a 6 pasos con casilla, cada uno ligado a su criterio.
+
+- Número: el siguiente libre en `docs/specs/` (001 si es la primera). Nombre corto, en minúsculas y
+  con guiones: `001-landing-campana`.
+- Rama: `feature/` más el mismo número y nombre. Todavía no se crea; eso pasa en `/construir`.
+- Si un criterio no se puede comprobar mirando el resultado ("que se vea profesional"), no es un
+  criterio: pregunta qué vería la persona para saber que ya está.
+- Si esta feature necesita algo de otra que todavía no está `terminada` e integrada (por ejemplo,
+  copiar una página que sigue a medias), dilo: primero se termina e integra esa, y después se
+  arranca esta.
+- Anota también **qué necesitas de ella**: textos, datos, una cuenta, una llave (que ella gestiona,
+  no tú).
+
+Muéstrale la spec completa en el chat, en español simple, y pregunta: "¿Así? ¿Cambiamos algo?".
+Ajusta hasta que diga que sí.
+
+## Paso 5. Guardar la spec y arrancar
+
+La ficha y las specs son la memoria del proyecto y viven en `main`, la línea principal, para que
+cualquier feature nueva las encuentre. Con el sí:
+
+1. Si la carpeta ya tiene historial (hay `.git`), revisa en qué rama estás. Si no es `main`, revisa
+   `git status`: si hay cambios sin guardar, para y resuélvelos con la persona (`/guardar` en su
+   rama) antes de moverte. Luego `git switch main`.
+2. Guarda la spec en `docs/specs/NNN-nombre.md` con `Estado: aprobada`, y agrégala a la tabla de
+   Features de `docs/proyecto.md`. Explica: "lo dejo escrito en tu proyecto; así, aunque cierres
+   esto, la próxima vez sabemos en qué íbamos".
+3. Propón `/guardar` para dejar la ficha y la spec en `main`.
+4. Pregunta: "¿Empezamos con el paso 1?". Solo con el sí, pasa a `/construir`.
 
 ## Lo que no haces aquí
 
-- No creas archivos ni instalas nada.
+- No escribes código ni instalas nada. Los únicos archivos que creas son la ficha y la spec, y solo
+  después de que la persona los aprobó.
 - No propones diez ideas: una, la más simple que resuelva el problema.
 - No usas jerga sin explicarla en la misma frase.

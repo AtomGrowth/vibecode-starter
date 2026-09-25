@@ -16,6 +16,14 @@ y el criterio, la IA trae el código. Estas son las reglas de la casa.
   publicar.
 - Si no sabes por dónde empezar, propón `/empezar`.
 
+## La memoria del proyecto
+- Si existe `docs/proyecto.md`, léelo al empezar la conversación, antes de responder: dice qué es el
+  proyecto y con qué está hecho. Cada feature tiene su spec en `docs/specs/`.
+- La ficha (`docs/proyecto.md`) y las specs nuevas se guardan en `main`. El código y el avance de
+  cada feature, en su rama `feature/NNN-nombre`. Nunca edites la ficha estando en una rama.
+- Si decido dejar una feature, se marca `abandonada` en su spec y se anota el porqué en la ficha,
+  las dos cosas en `main`. No se borra nada.
+
 ## Antes de construir, pregúntame (o pregúntate) esto
 1. ¿El problema es real y se repite? ¿O pasó una sola vez?
 2. ¿Ya existe algo que lo resuelve? Búscalo antes de construir desde cero.
